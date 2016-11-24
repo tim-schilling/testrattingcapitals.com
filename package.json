@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "moment": "^2.16.0",
+    "restler": "^3.4.0"
+  },
+  "name": "updateCron",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT"
+}
