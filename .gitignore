@@ -1,5 +1,15 @@
+/lib/
+/dist/client-bundle.js*
+/dist/*.json
 
-# Created by https://www.gitignore.io/api/node,windows,osx,linux
+# Created by https://www.gitignore.io/api/bower,node,windows,osx,linux
+
+### Bower ###
+bower_components
+.bower-cache
+.bower-registry
+.bower-tmp
+
 
 ### Node ###
 # Logs
