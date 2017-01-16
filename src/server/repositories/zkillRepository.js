@@ -3,7 +3,7 @@
 import Rest from 'restler';
 
 const ZKILL_BASE_URL = 'https://zkillboard.com';
-const ZKILL_CAPITAL_RESOURCE = '/api/losses/alliance/498125261/group/547,513,902,30,659,883/no-items/no-attackers/limit/1';
+const ZKILL_CAPITAL_RESOURCE = '/api/losses/alliance/498125261/group/30,513,547,659,883,902/no-items/no-attackers/limit/1';
 const ZKILL_VNI_RESOURCE = '/api/losses/alliance/498125261/ship/17843/no-items/no-attackers/limit/1';
 
 const zkillGet = (resource: string) =>
