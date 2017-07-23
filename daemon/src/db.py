@@ -29,7 +29,7 @@ class Context(object):
                 defines.DEFAULT_DB_CONNECTION_STRING
             ))
         if Context._session_factory is None:
-            Context._session_factory = sessionmaker(bind=Context._engine)
+            Context._session_factory = sessionmaker(bind=Context._engine, autocommit=False)
         Context._engine_lock.release()
 
     def __enter__(self):
