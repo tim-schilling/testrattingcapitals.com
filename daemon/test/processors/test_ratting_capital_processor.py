@@ -24,7 +24,8 @@ def test_process_ok(monkeypatch):
     assert isinstance(result, str)
 
 
-def test_process_wrong_alliance():
+def test_process_wrong_alliance(monkeypatch):
+    monkeypatch.setattr(unit, 'RATTING_CAPITAL_SHIP_IDS', mock_ship_id_set)
     test_input = {
         'package': {
             'killmail': {
@@ -44,7 +45,8 @@ def test_process_wrong_alliance():
     assert result is None
 
 
-def test_process_no_alliance():
+def test_process_no_alliance(monkeypatch):
+    monkeypatch.setattr(unit, 'RATTING_CAPITAL_SHIP_IDS', mock_ship_id_set)
     test_input = {
         'package': {
             'killmail': {
