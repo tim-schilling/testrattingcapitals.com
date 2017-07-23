@@ -33,6 +33,8 @@ def validate_time_to_wait(time_to_wait):
     if isinstance(time_to_wait, int):
         if time_to_wait <= 0:
             raise ValueError('time_to_wait')
+        if time_to_wait > 10:
+            raise ValueError('time_to_wait')
         return
     if time_to_wait is not None:
         raise TypeError('time_to_wait')

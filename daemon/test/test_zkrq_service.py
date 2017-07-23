@@ -67,13 +67,13 @@ def test_get_params_object(monkeypatch):
         assert 'queueID' in params
         assert 'ttw' in params
         assert 'a' == params['queueID']
-        assert 200 == params['ttw']
+        assert 9 == params['ttw']
 
         return MockResponse({'package': {'unit': 'test'}}, 200)
 
     monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
 
-    unit.get('a', 200)
+    unit.get('a', 9)
 
 
 def test_get_200_with_body(monkeypatch):
