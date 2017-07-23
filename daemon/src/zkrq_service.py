@@ -1,7 +1,11 @@
+import logging
 import zkrq_repository
+
+logger = logging.getLogger('testrattingcapitals')
 
 
 def get(queue_id=None, time_to_wait=None):
+    logger.debug('Service querying zkrq')
     validate_queue_id(queue_id)
     validate_time_to_wait(time_to_wait)
 
@@ -16,7 +20,9 @@ def get(queue_id=None, time_to_wait=None):
 
     parsed_response = response.json()
     if parsed_response['package'] is None:
+        logging.debug('zkrq returned no kill')
         return None
+    logging.info('{} zkrq returned'.format(parsed_response['package']['killID']))
     return parsed_response
 
 

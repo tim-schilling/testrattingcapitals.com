@@ -1,7 +1,10 @@
+import logging
 from sqlalchemy import func
 
 from db import Context
 from schema import TrackedKill
+
+logger = logging.getLogger('testrattingcapitals')
 
 
 def add(tracked_kill):
@@ -22,5 +25,8 @@ def add(tracked_kill):
             TrackedKill.kill_id == tracked_kill.kill_id
         ).scalar()
         if existing == 0:
+            logger.debug('{}-{} not in persistent storage. Writing.'.format(tracked_kill.kill_id, tracked_kill.kill_tracking_label))
             context.session.add(tracked_kill)
             context.session.commit()
+        else:
+            logger.debug('{}-{} already in persistent storage. Discarding.'.format(tracked_kill.kill_id, tracked_kill.kill_tracking_label))

@@ -69,7 +69,7 @@ def test_get_params_object(monkeypatch):
         assert 'a' == params['queueID']
         assert 9 == params['ttw']
 
-        return MockResponse({'package': {'unit': 'test'}}, 200)
+        return MockResponse({'package': {'unit': 'test', 'killID': 1}}, 200)
 
     monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
 
@@ -78,7 +78,7 @@ def test_get_params_object(monkeypatch):
 
 def test_get_200_with_body(monkeypatch):
     def mock_repo_get(params={}):
-        return MockResponse({'package': {'unit': 'test'}}, 200)
+        return MockResponse({'package': {'unit': 'test', 'killID': 1}}, 200)
 
     monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
 

@@ -1,7 +1,10 @@
 from datetime import datetime
 import json
+import logging
 from schema import TrackedKill
 import tracked_kill_repository
+
+logger = logging.getLogger('testrattingcapitals')
 
 
 def add(tracking_label, zk_response):
@@ -15,6 +18,7 @@ def add(tracking_label, zk_response):
     tk = convert_zk_response_to_tracked_kill(tracking_label, zk_response)
 
     # persist instance
+    logger.debug('{}-{} service persisting'.format(tk.kill_id, tk.kill_tracking_label))
     tracked_kill_repository.add(tk)
 
 

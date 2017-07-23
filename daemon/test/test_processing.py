@@ -11,7 +11,23 @@ def mock_processor_none(zkill):
 
 def test_process(monkeypatch):
     monkeypatch.setattr(unit, 'PROCESSORS', [mock_processor_ok, mock_processor_none])
-    result = unit.process('whatever')
+    test_input = {
+        'package': {
+            'killID': 1,
+            'killmail': {
+                'killTime': '2017.07.24 01:01:01',
+                'solarSystem': {
+                    'name': 'D-PNP9'
+                },
+                'victim': {
+                    'alliance': {
+                        'id': 1
+                    }
+                }
+            }
+        }
+    }
+    result = unit.process(test_input)
 
     assert isinstance(result, set)
     assert len(result) == 1

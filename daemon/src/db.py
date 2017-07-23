@@ -1,9 +1,12 @@
+import logging
 import os
 import threading
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 DEFAULT_DB_CONNECTION_STRING = 'sqlite:///db.sqlite3'
+
+logger = logging.getLogger('testrattingcapitals')
 
 
 class Context(object):
@@ -24,11 +27,13 @@ class Context(object):
 
         Context._engine_lock.acquire()
         if Context._engine is None:
+            logger.info('Creating db engine')
             Context._engine = create_engine(os.getenv(
                 'DB_CONNECTION_STRING',
                 DEFAULT_DB_CONNECTION_STRING
             ))
         if Context._session_factory is None:
+            logger.info('Creating db session_factory')
             Context._session_factory = sessionmaker(bind=Context._engine, autocommit=False)
         Context._engine_lock.release()
 
