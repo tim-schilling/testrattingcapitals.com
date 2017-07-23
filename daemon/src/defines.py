@@ -43,3 +43,5 @@ TRACKING_LABEL_SHIP_IDS = {
 }
 
 DEFAULT_DB_CONNECTION_STRING = 'sqlite:///db.sqlite3'
+
+DEFAULT_ZKRQ_URL = 'https://redisq.zkillboard.com/listen.php'
