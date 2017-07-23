@@ -3,7 +3,7 @@ import threading
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-import defines
+DEFAULT_DB_CONNECTION_STRING = 'sqlite:///db.sqlite3'
 
 
 class Context(object):
@@ -26,7 +26,7 @@ class Context(object):
         if Context._engine is None:
             Context._engine = create_engine(os.getenv(
                 'DB_CONNECTION_STRING',
-                defines.DEFAULT_DB_CONNECTION_STRING
+                DEFAULT_DB_CONNECTION_STRING
             ))
         if Context._session_factory is None:
             Context._session_factory = sessionmaker(bind=Context._engine, autocommit=False)
