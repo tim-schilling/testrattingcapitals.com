@@ -6,6 +6,7 @@
 
 REQUIREMENTS = \
 	requirements.txt \
+	requirements-testing.txt \
 
 DB_MIGRATION_COMMAND ?= alembic upgrade head
 DB_PATH ?= db.sqlite3
@@ -25,7 +26,7 @@ VENV_ACTIVATE = $(VENV_PATH)/bin/activate
 
 .PHONY: all migrate run virtualenv clean clean-pyc 
 
-all: lint migrate run
+all: lint check migrate run
 
 lint: virtualenv
 	. $(VENV_ACTIVATE) ; flake8 --config tox.ini --statistics --count $(LINT_OPTIONS)
