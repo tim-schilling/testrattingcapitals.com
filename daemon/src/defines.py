@@ -1,3 +1,5 @@
+"""Application-level constants.
+"""
 TRACKING_LABEL_SHIP_IDS = {
     """Ship IDs to associate with a particular tracking label
     """

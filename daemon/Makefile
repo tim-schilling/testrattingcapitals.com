@@ -26,7 +26,7 @@ VENV_ACTIVATE = $(VENV_PATH)/bin/activate
 
 .PHONY: all migrate run virtualenv clean clean-pyc 
 
-all: lint check migrate run
+all: lint check migrate
 
 lint: virtualenv
 	. $(VENV_ACTIVATE) ; flake8 --config tox.ini --statistics --count $(LINT_OPTIONS)
