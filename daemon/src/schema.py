@@ -31,4 +31,4 @@ class TrackedKill(Base):
     more_info_href = Column(String(255), nullable=False)
     full_response = Column(Text, nullable=False)
 
-    Index('idx_tracked_kill_by_label_timestamp', kill_tracking_label, kill_timestamp, kill_id, more_info_href, unique=True)
+    Index('idx_tracked_kill_by_label_timestamp', kill_tracking_label, kill_timestamp.desc(), kill_id, more_info_href, unique=True)

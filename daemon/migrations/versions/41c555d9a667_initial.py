@@ -1,8 +1,8 @@
-"""Initial
+"""initial
 
-Revision ID: 6be89ff18a09
+Revision ID: 41c555d9a667
 Revises: 
-Create Date: 2017-07-22 21:46:20.684819
+Create Date: 2017-07-23 15:35:34.922416
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6be89ff18a09'
+revision = '41c555d9a667'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,7 +37,7 @@ def upgrade():
     sa.Column('full_response', sa.Text(), nullable=False),
     sa.PrimaryKeyConstraint('kill_tracking_label', 'kill_id')
     )
-    op.create_index('idx_tracked_kill_by_label_timestamp', 'tracked_kill', ['kill_tracking_label', 'kill_timestamp', 'kill_id', 'more_info_href'], unique=True)
+    op.create_index('idx_tracked_kill_by_label_timestamp', 'tracked_kill', ['kill_tracking_label', sa.text('kill_timestamp DESC'), 'kill_id', 'more_info_href'], unique=True)
     # ### end Alembic commands ###
 
 
