@@ -35,7 +35,7 @@ check: virtualenv lint $(EXTRA_CHECKS)
 	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) py.test $(TEST_OPTIONS) --color=auto $(TEST_DIR)
 
 run: virtualenv migrate
-	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/bin/daemon.py
+	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/daemon.py
 
 migrate: virtualenv
 	. $(VENV_ACTIVATE) ; $(DB_MIGRATION_COMMAND)
