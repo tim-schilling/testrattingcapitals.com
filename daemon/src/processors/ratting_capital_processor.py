@@ -1,4 +1,4 @@
-# from processors import shared_defines
+from processors import shared_defines
 
 TRACKING_LABEL = 'RATTING_CAPITAL'
 
@@ -35,3 +35,22 @@ RATTING_CAPITAL_SHIP_IDS = {
     28846,  # nomad
     28844,  # rhea
 },
+
+
+def process(zkill):
+    if not isinstance(zkill, dict):
+        return None
+
+    # is alliance kill
+    if 'alliance' not in zkill['package']['killmail']['victim']:
+        return None
+
+    if shared_defines.TEST_ALLIANCE_ID != zkill['package']['killmail']['victim']['alliance']['id']:
+        return None
+
+    # is a ratting capital
+    kill_ship_id = zkill['package']['killmail']['victim']['shipType']['id']
+    if kill_ship_id not in RATTING_CAPITAL_SHIP_IDS:
+        return None
+
+    return TRACKING_LABEL
