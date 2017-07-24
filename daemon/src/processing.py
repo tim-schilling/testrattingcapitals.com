@@ -16,8 +16,8 @@ PROCESSORS = [
 
 
 def process(zkill):
-    logger.debug('{} processing'.format(zkill['package']['killID']))
     labels = set()
+    logger.debug('{} processing'.format(zkill['package']['killID']))
     for proc in PROCESSORS:
         proc_result = proc(zkill)
         if proc_result is not None:

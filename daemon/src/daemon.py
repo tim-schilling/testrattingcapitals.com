@@ -33,9 +33,10 @@ def configure_logging():
 def processing_loop():
     logger.debug('Processing loop tick')
     kill = zkrq_service.get(ZKRQ_QUEUE_ID, ZKRQ_TTW)
-    labels = processing.process(kill)
-    for label in labels:
-        tracked_kill_service.add(label, kill)
+    if kill:
+        labels = processing.process(kill)
+        for label in labels:
+            tracked_kill_service.add(label, kill)
 
 
 def main():
