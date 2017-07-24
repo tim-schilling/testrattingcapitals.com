@@ -20,9 +20,9 @@ def get(queue_id=None, time_to_wait=None):
 
     parsed_response = response.json()
     if parsed_response['package'] is None:
-        logging.debug('zkrq returned no kill')
+        logger.debug('zkrq returned no kill')
         return None
-    logging.info('{} zkrq returned'.format(parsed_response['package']['killID']))
+    logger.info('{} zkrq returned'.format(parsed_response['package']['killID']))
     return parsed_response
 
 
