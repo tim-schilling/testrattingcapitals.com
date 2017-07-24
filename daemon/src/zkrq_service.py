@@ -20,7 +20,7 @@ def get(queue_id=None, time_to_wait=None):
     if os.getenv('ZKRQ_USER_AGENT'):
         headers['User-Agent'] = os.getenv('ZKRQ_USER_AGENT')
 
-    response = zkrq_repository.get(params)
+    response = zkrq_repository.get(params, headers)
     response.raise_for_status()
 
     parsed_response = response.json()
