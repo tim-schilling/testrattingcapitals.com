@@ -25,15 +25,16 @@ RUN alembic upgrade head
 # Runtime image
 FROM library/python:3.6.2-alpine3.6
 
-VOLUME /data
-ENV DB_CONNECTION_STRING="sqlite:////data/db.sqlite3"
+ARG EXEC_UID=1999
 ARG REQUIREMENTS="requirements.txt"
 
 RUN apk add --no-cache \
     sqlite
 
 COPY . /app
-RUN find . -iname "*.pyc" -type f | xargs -n 10 rm -f && \
+RUN rm -rf /app/venv && \
+    rm -rf /app/db.sqlite3 && \
+    find . -iname "*.pyc" -type f | xargs -n 10 rm -f && \
     find . -name __pycache__ -type d | xargs -n 10 rm -rf
 WORKDIR /app
 
@@ -42,4 +43,10 @@ RUN pip install -U pip && \
 
 COPY ./scripts/daemon-entrypoint.sh /app/docker-entrypoint.sh
 
+RUN mkdir /data && \
+    adduser -u $EXEC_UID -s /bin/sh -D runtime_user && \
+    chown -R runtime_user:runtime_user /app /data
+USER runtime_user
+
+ENV DB_CONNECTION_STRING="sqlite:////data/db.sqlite3"
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
