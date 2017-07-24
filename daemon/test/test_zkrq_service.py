@@ -1,3 +1,4 @@
+import os
 import pytest
 import zkrq_repository
 import zkrq_service as unit
@@ -63,7 +64,7 @@ class MockResponse(object):
 
 
 def test_get_params_object(monkeypatch):
-    def mock_repo_get(params={}):
+    def mock_repo_get(params={}, headers={}):
         assert 'queueID' in params
         assert 'ttw' in params
         assert 'a' == params['queueID']
@@ -76,8 +77,28 @@ def test_get_params_object(monkeypatch):
     unit.get('a', 9)
 
 
+def test_get_header_object(monkeypatch):
+    def mock_getenv(*args, **kwargs):
+        return 'mock user agent'
+
+    def mock_repo_get(params={}, headers={}):
+        assert 'queueID' in params
+        assert 'ttw' in params
+        assert 'a' == params['queueID']
+        assert 9 == params['ttw']
+        assert 'User-Agent' in headers
+        assert 'mock user agent' == headers['User-Agent']
+
+        return MockResponse({'package': {'unit': 'test', 'killID': 1}}, 200)
+
+    monkeypatch.setattr(os, 'getenv', mock_getenv)
+    monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
+
+    unit.get('a', 9)
+
+
 def test_get_200_with_body(monkeypatch):
-    def mock_repo_get(params={}):
+    def mock_repo_get(params={}, headers={}):
         return MockResponse({'package': {'unit': 'test', 'killID': 1}}, 200)
 
     monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
@@ -89,7 +110,7 @@ def test_get_200_with_body(monkeypatch):
 
 
 def test_get_200_with_no_body(monkeypatch):
-    def mock_repo_get(params={}):
+    def mock_repo_get(params={}, headers={}):
         return MockResponse({'package': None}, 200)
 
     monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
@@ -99,7 +120,7 @@ def test_get_200_with_no_body(monkeypatch):
 
 
 def test_get_500(monkeypatch):
-    def mock_repo_get(params={}):
+    def mock_repo_get(params={}, headers={}):
         return MockResponse(None, 500)
 
     monkeypatch.setattr(zkrq_repository, 'get', mock_repo_get)
