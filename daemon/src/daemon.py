@@ -49,7 +49,7 @@ def main():
         try:
             processing_loop()
         except:
-            # TODO exponential fallback?
+            # TODO exponential fallback
             logger.exception('unhandled exception')
         if TICK_RATE > 0:
             for i in range(TICK_RATE * 4):

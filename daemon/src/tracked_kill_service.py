@@ -56,10 +56,13 @@ def convert_zk_response_to_tracked_kill(tracking_label, zk):
     )
     tk.ship_id = pk['killmail']['victim']['shipType']['id']
     tk.ship_name = pk['killmail']['victim']['shipType']['name']
-    tk.character_id = pk['killmail']['victim']['character']['id']
-    tk.character_name = pk['killmail']['victim']['character']['name']
+    # structure kills do not have an associated character
+    if 'character' in pk['killmail']['victim']:
+        tk.character_id = pk['killmail']['victim']['character']['id']
+        tk.character_name = pk['killmail']['victim']['character']['name']
     tk.corporation_id = pk['killmail']['victim']['corporation']['id']
     tk.corporation_name = pk['killmail']['victim']['corporation']['name']
+    # players do not have to join an alliance
     if 'alliance' in pk['killmail']['victim']:
         tk.alliance_id = pk['killmail']['victim']['alliance']['id']
         tk.alliance_name = pk['killmail']['victim']['alliance']['name']
