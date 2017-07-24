@@ -1,4 +1,5 @@
 import logging
+import os
 from processors import \
     all_processor, \
     deployment_bad_dragon_processor, \
@@ -8,11 +9,13 @@ from processors import \
 logger = logging.getLogger('testrattingcapitals')
 
 PROCESSORS = [
-    all_processor.process,
     deployment_bad_dragon_processor.process,
     ratting_capital_processor.process,
     vni_processor.process,
 ]
+
+if os.getenv('PERSIST_ALL'):
+    PROCESSORS.append(all_processor.process)
 
 
 def process(zkill):
