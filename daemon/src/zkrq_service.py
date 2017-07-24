@@ -1,4 +1,5 @@
 import logging
+import os
 import zkrq_repository
 
 logger = logging.getLogger('testrattingcapitals')
@@ -14,6 +15,10 @@ def get(queue_id=None, time_to_wait=None):
         params['queueID'] = queue_id
     if time_to_wait:
         params['ttw'] = time_to_wait
+
+    headers = {}
+    if os.getenv('ZKRQ_USER_AGENT'):
+        headers['User-Agent'] = os.getenv('ZKRQ_USER_AGENT')
 
     response = zkrq_repository.get(params)
     response.raise_for_status()
