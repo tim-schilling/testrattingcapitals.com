@@ -30,3 +30,18 @@ def add(tracked_kill):
             context.session.commit()
         else:
             logger.debug('{}-{} already in persistent storage. Discarding.'.format(tracked_kill.kill_id, tracked_kill.kill_tracking_label))
+
+
+def get(tracking_label=None):
+    """Retrieve all records, optionally filtering by tracking_label.
+    """
+    results = []
+    with Context() as context:
+        if tracking_label:
+            result_query = context.session.query(TrackedKill).filter(
+                TrackedKill.kill_tracking_label == tracking_label
+            )
+        else:
+            result_query = context.session.query(TrackedKill).all()
+        results = [r for r in result_query]
+    return results

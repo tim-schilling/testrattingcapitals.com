@@ -22,6 +22,15 @@ def add(tracking_label, zk_response):
     tracked_kill_repository.add(tk)
 
 
+def get(tracking_label=None):
+    """Retrieve all records, optionally filtering by tracking_label.
+    """
+    if tracking_label:
+        validate_tracking_label(tracking_label)
+
+    return tracked_kill_repository.get(tracking_label)
+
+
 def validate_tracking_label(tracking_label):
     if not isinstance(tracking_label, str):
         raise(TypeError('tracking_label'))
