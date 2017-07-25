@@ -7,6 +7,7 @@ def test_process_ok(monkeypatch):
     monkeypatch.setattr(unit, 'RATTING_CAPITAL_SHIP_IDS', mock_ship_id_set)
     test_input = {
         'package': {
+            'killID': 1,
             'killmail': {
                 'victim': {
                     'alliance': {
@@ -28,6 +29,7 @@ def test_process_wrong_alliance(monkeypatch):
     monkeypatch.setattr(unit, 'RATTING_CAPITAL_SHIP_IDS', mock_ship_id_set)
     test_input = {
         'package': {
+            'killID': 1,
             'killmail': {
                 'victim': {
                     'alliance': {
@@ -49,6 +51,7 @@ def test_process_no_alliance(monkeypatch):
     monkeypatch.setattr(unit, 'RATTING_CAPITAL_SHIP_IDS', mock_ship_id_set)
     test_input = {
         'package': {
+            'killID': 1,
             'killmail': {
                 'victim': {
                     'shipType': {
@@ -67,6 +70,7 @@ def test_process_wrong_ship_id(monkeypatch):
     monkeypatch.setattr(unit, 'RATTING_CAPITAL_SHIP_IDS', mock_ship_id_set)
     test_input = {
         'package': {
+            'killID': 1,
             'killmail': {
                 'victim': {
                     'alliance': {

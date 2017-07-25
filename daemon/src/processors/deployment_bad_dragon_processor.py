@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 from processors import shared_defines
 
@@ -115,30 +116,59 @@ ESOTERIA_SYSTEM_NAMES = {  # http://evemaps.dotlan.net/region/Esoteria
     'VUAC-Y',
 }
 
+logger = logging.getLogger('testrattingcapitals')
+
 
 def process(zkill):
     if not isinstance(zkill, dict):
+        logger.debug('? processor DEPLOYMENT_BAD_DRAGON REJECT - not dict')
         return None
 
     # is alliance kill
     if 'alliance' not in zkill['package']['killmail']['victim']:
+        logger.debug(
+            '{} processor DEPLOYMENT_BAD_DRAGON REJECT - no alliance'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     if shared_defines.TEST_ALLIANCE_ID != zkill['package']['killmail']['victim']['alliance']['id']:
+        logger.debug(
+            '{} processor DEPLOYMENT_BAD_DRAGON REJECT - wrong alliance_id'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     # is after startdate
     kill_time = datetime.strptime(zkill['package']['killmail']['killTime'], '%Y.%m.%d %H:%M:%S')
     if START_TIMESTAMP and kill_time < START_TIMESTAMP:
+        logger.debug(
+            '{} processor DEPLOYMENT_BAD_DRAGON REJECT - predates START_TIMESTAMP'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     # is before enddate
     if END_TIMESTAMP and kill_time > END_TIMESTAMP:
+        logger.debug(
+            '{} processor DEPLOYMENT_BAD_DRAGON REJECT - postdates END_TIMESTAMP'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     # is in esoteria
     kill_system = zkill['package']['killmail']['solarSystem']['name']
     if kill_system not in ESOTERIA_SYSTEM_NAMES:
+        logger.debug(
+            '{} processor DEPLOYMENT_BAD_DRAGON REJECT - system_id not in {}'.format(
+                zkill['package']['killID'],
+                'ESOTERIA_SYSTEM_NAMES'
+            )
+        )
         return None
 
     return TRACKING_LABEL

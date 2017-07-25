@@ -1,3 +1,4 @@
+import logging
 from processors import shared_defines
 
 TRACKING_LABEL = 'RATTING_CAPITAL'
@@ -36,21 +37,39 @@ RATTING_CAPITAL_SHIP_IDS = {
     28844,  # rhea
 },
 
+logger = logging.getLogger('testrattingcapitals')
+
 
 def process(zkill):
     if not isinstance(zkill, dict):
+        logger.debug('? processor RATTING_CAPITAL REJECT - not dict')
         return None
 
     # is alliance kill
     if 'alliance' not in zkill['package']['killmail']['victim']:
+        logger.debug(
+            '{} processor RATTING_CAPITAL REJECT - no alliance'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     if shared_defines.TEST_ALLIANCE_ID != zkill['package']['killmail']['victim']['alliance']['id']:
+        logger.debug(
+            '{} processor RATTING_CAPITAL REJECT - wrong alliance_id'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     # is a ratting capital
     kill_ship_id = zkill['package']['killmail']['victim']['shipType']['id']
     if kill_ship_id not in RATTING_CAPITAL_SHIP_IDS:
+        logger.debug(
+            '{} processor RATTING_CAPITAL REJECT - ship_id not in RATTING_CAPITAL_SHIP_IDS'.format(
+                zkill['package']['killID']
+            )
+        )
         return None
 
     return TRACKING_LABEL
