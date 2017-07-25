@@ -35,7 +35,7 @@ RATTING_CAPITAL_SHIP_IDS = {
     28848,  # anshar
     28846,  # nomad
     28844,  # rhea
-},
+}
 
 logger = logging.getLogger('testrattingcapitals')
 
