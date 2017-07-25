@@ -38,7 +38,7 @@ run-daemon: virtualenv migrate
 	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/daemon.py
 
 run-reprocessor: virtualenv migrate
-	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/daemon.py
+	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/reprocessor.py
 
 migrate: virtualenv
 	. $(VENV_ACTIVATE) ; $(DB_MIGRATION_COMMAND)
