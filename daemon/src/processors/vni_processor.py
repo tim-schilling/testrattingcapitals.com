@@ -2,7 +2,7 @@ from processors import shared_defines
 
 TRACKING_LABEL = 'VNI'
 
-VNI_SHIP_ID = 17843,  # vexor navy issue
+VNI_SHIP_ID = 17843  # vexor navy issue
 
 
 def process(zkill):
