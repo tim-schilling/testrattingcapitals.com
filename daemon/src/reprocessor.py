@@ -23,7 +23,7 @@ def shutdown(*args, **kwargs):
 
 def configure_logging():
     logger.setLevel(int(os.getenv('LOG_LEVEL', logging.DEBUG)))
-    stdio = logging.StreamHandler()
+    stdio = logging.StreamHandler(sys.stdout)
     stdio.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
     logger.addHandler(stdio)
 
