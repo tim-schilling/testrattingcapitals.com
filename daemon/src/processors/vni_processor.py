@@ -34,7 +34,7 @@ def process(zkill):
     kill_ship_id = zkill['package']['killmail']['victim']['shipType']['id']
     if kill_ship_id != VNI_SHIP_ID:
         logger.debug(
-            '{} processor RATTING_CAPITAL REJECT - ship_id not equal VNI_SHIP_ID'.format(
+            '{} processor VNI REJECT - ship_id not equal VNI_SHIP_ID'.format(
                 zkill['package']['killID']
             )
         )
