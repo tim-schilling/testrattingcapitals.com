@@ -34,7 +34,10 @@ lint: virtualenv
 check: virtualenv lint $(EXTRA_CHECKS)
 	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) py.test $(TEST_OPTIONS) --color=auto $(TEST_DIR)
 
-run: virtualenv migrate
+run-daemon: virtualenv migrate
+	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/daemon.py
+
+run-reprocessor: virtualenv migrate
 	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/daemon.py
 
 migrate: virtualenv
