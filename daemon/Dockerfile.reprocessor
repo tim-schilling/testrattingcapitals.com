@@ -1,0 +1,52 @@
+# Run tests. Do not allow a build to complete without passing.
+FROM library/python:3.6.2-alpine3.6
+
+ARG REQUIREMENTS="requirements.txt \
+  requirements-testing.txt"
+ARG TEST_DIR="/app/test"
+ARG TEST_OPTIONS="-vv --junitxml=junit.xml --cov-report term-missing --cov=/app/src"
+
+ENV PYTHONPATH="/app/src"
+
+COPY . /app
+RUN find . -iname "*.pyc" -type f | xargs -n 10 rm -f
+RUN find . -name __pycache__ -type d | xargs -n 10 rm -rf
+WORKDIR /app
+
+RUN apk add --no-cache \
+    sqlite
+
+RUN pip install -U pip
+RUN echo $REQUIREMENTS | xargs -n 1 pip install -r
+RUN flake8 --config tox.ini --statistics --count
+RUN py.test $TEST_OPTIONS --color=auto $TEST_DIR
+RUN alembic upgrade head
+
+# Runtime image
+FROM library/python:3.6.2-alpine3.6
+
+ARG EXEC_UID=1999
+ARG REQUIREMENTS="requirements.txt"
+
+RUN apk add --no-cache \
+    sqlite
+
+COPY . /app
+RUN rm -rf /app/venv && \
+    rm -rf /app/db.sqlite3 && \
+    find . -iname "*.pyc" -type f | xargs -n 10 rm -f && \
+    find . -name __pycache__ -type d | xargs -n 10 rm -rf
+WORKDIR /app
+
+RUN pip install -U pip && \
+    echo $REQUIREMENTS | xargs -n 1 pip install -r
+
+COPY ./scripts/reprocessor-entrypoint.sh /app/docker-entrypoint.sh
+
+RUN mkdir /data && \
+    adduser -u $EXEC_UID -s /bin/sh -D runtime_user && \
+    chown -R runtime_user:runtime_user /app /data
+USER runtime_user
+
+ENV DB_CONNECTION_STRING="sqlite:////data/db.sqlite3"
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

@@ -31,7 +31,7 @@ def configure_logging():
 def processing_loop(kill):
     if kill:
         # parse json to dict dict
-        kill_dict = json.load(kill.full_response)
+        kill_dict = json.loads(kill.full_response)
         # process dict
         labels = processing.process(kill_dict)
         for label in labels:
