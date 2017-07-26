@@ -6,7 +6,8 @@ Reads in a stream of all "kill" events in EVE Online and stores interesting
 (read: hilariously embarassing) ones.
 
 Version 2.0.0 is under active development and not ready for release. Check out
-version 1 on the master branch for now - it's what's live at
+[version1](https://github.com/tonymke/testrattingcapitals.com/tree/release/1.0.0)
+on the master branch for now - it's what's live at
 [testrattingcapitals.com](https://testrattingcapitals.com).
 
 ## Services
@@ -36,7 +37,7 @@ AGPLv3. See LICENSE.txt
     testrattingcapitals.com is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+    GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
     along with testrattingcapitals.com.  If not, see 
