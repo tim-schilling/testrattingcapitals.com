@@ -2,6 +2,6 @@
 
 set -ex
 
-export PYTHONPATH="/app/src:$PYTHONPATH"
+export PYTHONPATH="/app:$PYTHONPATH"
 alembic upgrade head
-python /app/src/daemon.py
+python -m "testrattingcapitals.bin.daemon"

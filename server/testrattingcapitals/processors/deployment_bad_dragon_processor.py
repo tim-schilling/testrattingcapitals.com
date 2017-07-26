@@ -1,7 +1,7 @@
 from datetime import datetime
 import logging
 
-from processors import shared_defines
+from testrattingcapitals.processors import shared_defines
 
 TRACKING_LABEL = 'BAD_DRAGON_DEPLOYMENT'
 

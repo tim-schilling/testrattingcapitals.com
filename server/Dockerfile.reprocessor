@@ -1,27 +1,3 @@
-# Run tests. Do not allow a build to complete without passing.
-FROM library/python:3.6.2-alpine3.6
-
-ARG REQUIREMENTS="requirements.txt \
-  requirements-testing.txt"
-ARG TEST_DIR="/app/test"
-ARG TEST_OPTIONS="-vv --junitxml=junit.xml --cov-report term-missing --cov=/app/src"
-
-ENV PYTHONPATH="/app/src"
-
-COPY . /app
-RUN find . -iname "*.pyc" -type f | xargs -n 10 rm -f
-RUN find . -name __pycache__ -type d | xargs -n 10 rm -rf
-WORKDIR /app
-
-RUN apk add --no-cache \
-    sqlite
-
-RUN pip install -U pip
-RUN echo $REQUIREMENTS | xargs -n 1 pip install -r
-RUN flake8 --config tox.ini --statistics --count
-RUN py.test $TEST_OPTIONS --color=auto $TEST_DIR
-RUN alembic upgrade head
-
 # Runtime image
 FROM library/python:3.6.2-alpine3.6
 

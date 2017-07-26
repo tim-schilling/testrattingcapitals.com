@@ -1,6 +1,6 @@
 import logging
 import os
-from processors import \
+from testrattingcapitals.processors import \
     all_processor, \
     deployment_bad_dragon_processor, \
     ratting_capital_processor, \

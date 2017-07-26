@@ -15,10 +15,10 @@ DB_CONNECTION_STRING ?= sqlite:///$(DB_PATH)
 MIGRATIONS_DIR ?= migrations
 
 PYTHON_BIN ?= python3
-PYTHONPATH ?= $(shell pwd)/src
+PYTHONPATH ?= $(shell pwd)
 
 TEST_DIR ?= test
-TEST_OPTIONS ?= -vv --junitxml=junit.xml --cov-report term-missing --cov=src
+TEST_OPTIONS ?= -vv --junitxml=junit.xml --cov-report term-missing --cov=testrattingcapitals
 
 VENV_BIN ?= virtualenv
 VENV_PATH ?= venv
@@ -27,29 +27,6 @@ VENV_ACTIVATE = $(VENV_PATH)/bin/activate
 .PHONY: all migrate run virtualenv clean clean-pyc 
 
 all: lint check migrate
-
-lint: virtualenv
-	. $(VENV_ACTIVATE) ; flake8 --config tox.ini --statistics --count $(LINT_OPTIONS)
-
-check: virtualenv lint $(EXTRA_CHECKS)
-	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) py.test $(TEST_OPTIONS) --color=auto $(TEST_DIR)
-
-run-daemon: virtualenv migrate
-	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/daemon.py
-
-run-reprocessor: virtualenv migrate
-	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) python src/reprocessor.py
-
-migrate: virtualenv
-	. $(VENV_ACTIVATE) ; $(DB_MIGRATION_COMMAND)
-
-virtualenv: $(VENV_ACTIVATE)
-
-$(VENV_ACTIVATE): $(REQUIREMENTS)
-	test -f $(VENV_PATH)/bin/$(PYTHON_BIN) || $(VENV_BIN) --no-site-packages --python=$(PYTHON_BIN) $(VENV_PATH)
-	. $(VENV_ACTIVATE); pip install -U pip
-	. $(VENV_ACTIVATE); echo $(REQUIREMENTS) | xargs -n 1 pip install -r
-	touch $@
 
 clean: clean-pyc
 	rm -rf build dist
@@ -61,3 +38,26 @@ clean: clean-pyc
 clean-pyc:
 	find $(PYTHONPATH) $(MIGRATIONS_DIR) -iname "*.pyc" -type f | xargs -n 10 rm -f
 	find $(PYTHONPATH) $(MIGRATIONS_DIR) -name __pycache__ -type d | xargs -n 10 rm -rf
+
+virtualenv: $(VENV_ACTIVATE)
+
+$(VENV_ACTIVATE): $(REQUIREMENTS)
+	test -f $(VENV_PATH)/bin/$(PYTHON_BIN) || $(VENV_BIN) --no-site-packages --python=$(PYTHON_BIN) $(VENV_PATH)
+	. $(VENV_ACTIVATE); pip install -U pip
+	. $(VENV_ACTIVATE); echo $(REQUIREMENTS) | xargs -n 1 pip install -r
+	touch $@
+
+lint: virtualenv
+	. $(VENV_ACTIVATE) ; flake8 --config tox.ini --statistics --count $(LINT_OPTIONS)
+
+check: virtualenv lint $(EXTRA_CHECKS)
+	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) py.test $(TEST_OPTIONS) --color=auto $(TEST_DIR)
+
+migrate: virtualenv
+	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) $(DB_MIGRATION_COMMAND)
+
+run-daemon: virtualenv migrate
+	. $(VENV_ACTIVATE) ; python -m "testrattingcapitals.bin.daemon"
+
+run-reprocessor: virtualenv migrate
+	. $(VENV_ACTIVATE) ; python -m "testrattingcapitals.bin.reprocessor"

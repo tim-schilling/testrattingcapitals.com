@@ -6,9 +6,9 @@ from logging.config import fileConfig
 # Hack around alembic's weird handling of PYTHONPATH
 import os
 import sys
-sys.path.append(os.getcwd() + '/src')
+sys.path.append(os.getcwd() + '/testrattingcapitals')
 
-from schema import Base
+from testrattingcapitals.schema import Base
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

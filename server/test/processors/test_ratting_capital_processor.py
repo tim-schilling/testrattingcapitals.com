@@ -1,4 +1,4 @@
-from processors import ratting_capital_processor as unit, shared_defines
+from testrattingcapitals.processors import ratting_capital_processor as unit, shared_defines
 
 mock_ship_id_set = {1, 2, 3}
 

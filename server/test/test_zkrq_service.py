@@ -1,7 +1,7 @@
 import os
 import pytest
-import zkrq_repository
-import zkrq_service as unit
+
+from testrattingcapitals import zkrq_repository, zkrq_service as unit
 
 
 def test_validate_queue_id():

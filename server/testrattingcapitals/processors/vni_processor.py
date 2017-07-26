@@ -1,5 +1,6 @@
 import logging
-from processors import shared_defines
+
+from testrattingcapitals.processors import shared_defines
 
 TRACKING_LABEL = 'VNI'
 

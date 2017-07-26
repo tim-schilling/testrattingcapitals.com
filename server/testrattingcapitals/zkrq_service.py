@@ -1,6 +1,7 @@
 import logging
 import os
-import zkrq_repository
+
+from testrattingcapitals import zkrq_repository
 
 logger = logging.getLogger('testrattingcapitals')
 

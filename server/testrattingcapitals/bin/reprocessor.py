@@ -5,8 +5,7 @@ import signal
 import sys
 import time
 
-import processing
-import tracked_kill_service
+from testrattingcapitals import processing, tracked_kill_service
 
 logger = logging.getLogger('testrattingcapitals')
 

@@ -1,8 +1,8 @@
 import logging
 from sqlalchemy import func
 
-from db import Context
-from schema import TrackedKill
+from testrattingcapitals.db import Context
+from testrattingcapitals.schema import TrackedKill
 
 logger = logging.getLogger('testrattingcapitals')
 

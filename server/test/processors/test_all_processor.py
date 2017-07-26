@@ -1,4 +1,4 @@
-from processors import all_processor as unit
+from testrattingcapitals.processors import all_processor as unit
 
 
 def test_process():

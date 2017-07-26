@@ -1,8 +1,9 @@
 from datetime import datetime
 import json
 import logging
-from schema import TrackedKill
-import tracked_kill_repository
+
+from testrattingcapitals import tracked_kill_repository
+from testrattingcapitals.schema import TrackedKill
 
 logger = logging.getLogger('testrattingcapitals')
 

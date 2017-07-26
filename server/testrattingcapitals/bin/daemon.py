@@ -1,12 +1,12 @@
+#!/usr/bin/env python3
+
 import logging
 import os
 import signal
 import sys
 import time
 
-import processing
-import tracked_kill_service
-import zkrq_service
+from testrattingcapitals import processing, tracked_kill_service, zkrq_service
 
 logger = logging.getLogger('testrattingcapitals')
 

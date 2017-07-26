@@ -1,8 +1,9 @@
 from datetime import datetime
 import json
 import pytest
-from schema import TrackedKill
-import tracked_kill_service as unit
+
+from testrattingcapitals import tracked_kill_service as unit
+from testrattingcapitals.schema import TrackedKill
 
 
 def test_validate_tracking_label():

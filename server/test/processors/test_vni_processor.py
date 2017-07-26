@@ -1,4 +1,4 @@
-from processors import vni_processor as unit, shared_defines
+from testrattingcapitals.processors import vni_processor as unit, shared_defines
 
 mock_ship_id_set = 1
 

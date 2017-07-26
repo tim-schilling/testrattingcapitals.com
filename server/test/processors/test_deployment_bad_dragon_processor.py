@@ -1,5 +1,6 @@
 from datetime import datetime
-from processors import deployment_bad_dragon_processor as unit, shared_defines
+
+from testrattingcapitals.processors import deployment_bad_dragon_processor as unit, shared_defines
 
 
 def test_process_ok():
