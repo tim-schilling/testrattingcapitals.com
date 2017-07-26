@@ -63,6 +63,12 @@ def convert_zk_response_to_tracked_kill(tracking_label, zk):
     tk.kill_timestamp = convert_zk_timestamp_to_datetime(
         pk['killmail']['killTime']
     )
+    if not pk['killmail']['victim']['shipType'] or not pk['killmail']['victim']['shipType']['name']:
+        logger.error('{}-{} service - kill has no shipType or shipName. This will fail. full_response:\n{}\n\n'.format(
+            pk['killID'],
+            tracking_label,
+            json.dumps(zk)
+        ))
     tk.ship_id = pk['killmail']['victim']['shipType']['id']
     tk.ship_name = pk['killmail']['victim']['shipType']['name']
     # structure kills do not have an associated character
