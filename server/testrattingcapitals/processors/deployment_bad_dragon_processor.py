@@ -1,5 +1,6 @@
 from datetime import datetime
 import logging
+import json
 
 from testrattingcapitals.processors import shared_defines
 
@@ -161,7 +162,15 @@ def process(zkill):
         return None
 
     # is in esoteria
-    kill_system = zkill['package']['killmail']['solarSystem']['name']
+    # This is temporary while we debug why some kills are coming across with no solar system name
+    try:
+        kill_system = zkill['package']['killmail']['solarSystem']['name']
+    except:
+        logger.warn('{} processor DEPLOYMENT BAD_DRAGON upcoming no solar system error. Full object: {}'.format(
+            zkill['package']['killID'],
+            json.dumps(zkill)
+        ))
+        raise
     if kill_system not in ESOTERIA_SYSTEM_NAMES:
         logger.debug(
             '{} processor DEPLOYMENT_BAD_DRAGON REJECT - system_id not in {}'.format(
