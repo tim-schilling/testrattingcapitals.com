@@ -63,6 +63,7 @@ def convert_zk_response_to_tracked_kill(tracking_label, zk):
     tk.kill_timestamp = convert_zk_timestamp_to_datetime(
         pk['killmail']['killTime']
     )
+    # This is temporary while we debug why some kills are coming across with no ship name
     if not pk['killmail']['victim']['shipType'] or not pk['killmail']['victim']['shipType']['name']:
         logger.error('{}-{} service - kill has no shipType or shipName. This will fail. full_response:\n{}\n\n'.format(
             pk['killID'],
