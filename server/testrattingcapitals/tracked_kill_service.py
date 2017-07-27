@@ -86,30 +86,19 @@ def convert_zk_response_to_tracked_kill(tracking_label, zk):
     # structure kills do not have an associated character
     if 'character' in pk['killmail']['victim']:
         tk.character_id = pk['killmail']['victim']['character']['id']
-        tk.character_name = pk['killmail']['victim']['character']['name']
     tk.corporation_id = pk['killmail']['victim']['corporation']['id']
-    tk.corporation_name = pk['killmail']['victim']['corporation']['name']
     # players do not have to join an alliance
     if 'alliance' in pk['killmail']['victim']:
         tk.alliance_id = pk['killmail']['victim']['alliance']['id']
-        tk.alliance_name = pk['killmail']['victim']['alliance']['name']
     tk.total_value = pk['zkb']['totalValue']
     tk.system_id = pk['killmail']['solarSystem']['id']
     tk.more_info_href = 'https://zkillboard.com/kill/{}/'.format(pk['killID'])
     tk.full_response = json.dumps(zk)
 
-    """These entities names are occasionally not included in the zkrq killmail
-    object we get from upstream for whatever reason.
-
-    As a workaround, we have the repository attach them from a lookup table
-    containing a dump of all CCP item and system IDs mapped to their names in en-US.
-
-    This is ugly, and I don't like doing business logic work at the repo layer, but
-    opening up additional sessions per record is expensive.
-    """
-    # tk.ship_name = pk['killmail']['victim']['shipType']['name']
-    # tk.system_name = pk['killmail']['solarSystem']['name']
-    tk.ship_name = ''
-    tk.system_name = ''
+    tk.character_name = None  # deprecated
+    tk.corporation_name = ''  # deprecated
+    tk.alliance_name = None  # deprecated
+    tk.ship_name = ''  # deprecated
+    tk.system_name = ''  # deprecated
 
     return tk

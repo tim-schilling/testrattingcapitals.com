@@ -72,15 +72,17 @@ def test_convert_zk_response_to_tracked_kill():
     assert 63639452 == result.kill_id
     assert datetime(2017, 7, 23, 1, 8, 58) == result.kill_timestamp
     assert 670 == result.ship_id
-    # assert 'Capsule' == result.ship_name # this is now handled later now
     assert 1942609699 == result.character_id
-    assert 'Doug Widereamer' == result.character_name
     assert 98388312 == result.corporation_id
-    assert 'Pandemic Horde Inc.' == result.corporation_name
     assert 99005338 == result.alliance_id
-    assert 'Pandemic Horde' == result.alliance_name
     assert 10000 == result.total_value
     assert 30003699 == result.system_id
-    # assert 'MPPA-A' == result.system_name # this is handled later now
     assert 'https://zkillboard.com/kill/63639452/' == result.more_info_href
     assert json.dumps(input_zk_response) == result.full_response
+
+    # deprecated fields should be null where possible, otherwise default value for type
+    assert result.character_name is None
+    assert '' == result.corporation_name
+    assert result.alliance_name is None
+    assert '' == result.ship_name
+    assert '' == result.system_name
