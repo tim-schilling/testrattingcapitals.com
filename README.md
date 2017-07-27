@@ -27,7 +27,7 @@ on the master branch for now - it's what's live at
 
 ## License
 
-AGPLv3. See LICENSE.txt
+    Copyright (c) 2016-2017 Tony Lechner and contributors
 
     testrattingcapitals.com is free software: you can redistribute it and/or
     modify it under the terms of the GNU Affero General Public License as
