@@ -2,7 +2,7 @@ import logging
 from sqlalchemy import func
 
 from testrattingcapitals.db import Context
-from testrattingcapitals.schema import TrackedKill
+from testrattingcapitals.schema import EveItem, EveSolarSystem, TrackedKill
 
 logger = logging.getLogger('testrattingcapitals')
 
@@ -26,6 +26,9 @@ def add(tracked_kill):
         ).scalar()
         if existing == 0:
             logger.debug('{}-{} not in persistent storage. Writing.'.format(tracked_kill.kill_id, tracked_kill.kill_tracking_label))
+            # get system, ship name from lookup tables
+            tracked_kill.ship_name = context.session.query(EveItem.Name).filter(EveItem.id == tracked_kill.ship_id).one()
+            tracked_kill.system_name = context.session.query(EveSolarSystem.Name).filter(EveSolarSystem.id == tracked_kill.system_id).one()
             context.session.add(tracked_kill)
             context.session.commit()
         else:

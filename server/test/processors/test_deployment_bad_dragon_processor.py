@@ -3,14 +3,17 @@ from datetime import datetime
 from testrattingcapitals.processors import deployment_bad_dragon_processor as unit, shared_defines
 
 
-def test_process_ok():
+def test_process_ok(monkeypatch):
+    monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
+    monkeypatch.setattr(unit, 'END_TIMESTAMP', datetime(2020, 1, 1))
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -25,14 +28,17 @@ def test_process_ok():
     assert isinstance(result, str)
 
 
-def test_process_wrong_alliance():
+def test_process_wrong_alliance(monkeypatch):
+    monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
+    monkeypatch.setattr(unit, 'END_TIMESTAMP', datetime(2020, 1, 1))
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -54,7 +60,7 @@ def test_process_no_alliance():
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                 }
@@ -68,13 +74,14 @@ def test_process_no_alliance():
 
 def test_process_before_startdate(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2020, 1, 1))
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -91,13 +98,14 @@ def test_process_before_startdate(monkeypatch):
 
 def test_process_no_startdate(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', None)
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '1990.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -114,13 +122,14 @@ def test_process_no_startdate(monkeypatch):
 
 def test_process_after_startdate(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -138,13 +147,14 @@ def test_process_after_startdate(monkeypatch):
 def test_process_after_enddate(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
     monkeypatch.setattr(unit, 'END_TIMESTAMP', datetime(2001, 1, 1))
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -162,13 +172,14 @@ def test_process_after_enddate(monkeypatch):
 def test_process_no_enddate(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
     monkeypatch.setattr(unit, 'END_TIMESTAMP', None)
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -186,13 +197,14 @@ def test_process_no_enddate(monkeypatch):
 def test_process_before_enddate(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
     monkeypatch.setattr(unit, 'END_TIMESTAMP', datetime(2020, 1, 1))
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -210,14 +222,14 @@ def test_process_before_enddate(monkeypatch):
 def test_process_is_in_esoteria(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
     monkeypatch.setattr(unit, 'END_TIMESTAMP', datetime(2020, 1, 1))
-    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_NAMES', {'D-PNP9'})
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 1
                 },
                 'victim': {
                     'alliance': {
@@ -235,14 +247,14 @@ def test_process_is_in_esoteria(monkeypatch):
 def test_process_is_not_in_esoteria(monkeypatch):
     monkeypatch.setattr(unit, 'START_TIMESTAMP', datetime(2000, 1, 1))
     monkeypatch.setattr(unit, 'END_TIMESTAMP', datetime(2020, 1, 1))
-    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_NAMES', {'not D-PNP9'})
+    monkeypatch.setattr(unit, 'ESOTERIA_SYSTEM_IDS', {1})
     test_input = {
         'package': {
             'killID': 1,
             'killmail': {
                 'killTime': '2017.07.24 01:01:01',
                 'solarSystem': {
-                    'name': 'D-PNP9'
+                    'id': 2
                 },
                 'victim': {
                     'alliance': {

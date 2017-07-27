@@ -1,6 +1,5 @@
 from datetime import datetime
 import logging
-import json
 
 from testrattingcapitals.processors import shared_defines
 
@@ -8,113 +7,20 @@ TRACKING_LABEL = 'BAD_DRAGON_DEPLOYMENT'
 
 START_TIMESTAMP = datetime(2017, 7, 22, 19, 0, 0)
 END_TIMESTAMP = None  # TODO update when we move out
-ESOTERIA_SYSTEM_NAMES = {  # http://evemaps.dotlan.net/region/Esoteria
-    # 3WN-1T constellation
-    '6EK-BV',
-    'BY-MSY',
-    'CZ6U-1',
-    'D-PNP9',
-    'E1UU-3',
-    'G-YZUX',
-    'P-3XVV',
-
-    # 7ZRW-G constellation
-    '111-F1',
-    '6-TYRX',
-    'H-T40Z',
-    'IR-FDV',
-    'J-RVGD',
-    'NIZJ-0',
-    'Q1-R7K',
-    'V1ZC-S',
-
-    # 8T-OLH constellation
-    '4-OUKF',
-    '5-9UXZ',
-    'C9N-CC',
-    'DTX8-M',
-    'HAJ-DQ',
-    'JAUD-V',
-    'Q0OH-V',
-    'X-7BIX',
-
-    # 9D1V-O constellation
-    '29YH-V',
-    'DL-CDY',
-    'IPX-H5',
-    'LG-RO2',
-    'QS-530',
-    'VR-YRV',
-    'X-HISR',
-
-    # E-ILCH constellation
-    'DIBH-Q',
-    'DNEP-Y',
-    'G-4H4C',
-    'G-JC9R',
-    'H-YHYM',
-    'HHE5-L',
-    'PE-H02',
-    'YAP-TN',
-    'Z-MO29',
-    '02V-BK',
-    'A5MT-B',
-    'JD-TYH',
-    'MS2-V8',
-    'R-ARKN',
-    'SN9S-N',
-
-    # FY6-NK constellation
-    '2R-KLH',
-    '6SB-BN',
-    'B1D-KU',
-    'KSM-1T',
-    'QFIU-K',
-    'YRV-MZ',
-
-    # JSZ-X6 constellation
-    '16P-PX',
-    'BZ-0GW',
-    'CR-0E5',
-    'WX-6UX',
-    'XKZ8-H',
-    'Z-Y9C3',
-
-    # KUSW-P constellation
-    'A-CJGE',
-    'G2-INZ',
-    'HHQ-M1',
-    'HT4K-M',
-    'RBW-8G',
-    'VYJ-DA',
-    'WAC-HW',
-
-    # O-PQU0 constellation
-    '7P-J38',
-    'C-PEWN',
-    'L-M6JK',
-    'P9F-ZG',
-    'PK-PHZ',
-    'QFGB-E',
-    'WT-2J9',
-
-    # Q-2BI6 constellation
-    '0-O6XF',
-    'C-VZAK',
-    'D-FVI7',
-    'FN-GFQ',
-    'NH-R5B',
-    'VL7-60',
-
-    # R2-BT6 constellation
-    '450I-W',
-    'A1-AUH',
-    'F-UVBV',
-    'OIOM-Y',
-    'R-FM0G',
-    'TEIZ-C',
-    'V-XANH',
-    'VUAC-Y',
+ESOTERIA_SYSTEM_IDS = {  # http://evemaps.dotlan.net/region/Esoteria
+    30003098, 30003099, 30003100, 30003101, 30003102, 30003103, 30003104,
+    30003105, 30003106, 30003107, 30003108, 30003109, 30003110, 30003111,
+    30003112, 30003113, 30003114, 30003115, 30003116, 30003117, 30003118,
+    30003119, 30003120, 30003121, 30003122, 30003123, 30003124, 30003125,
+    30003126, 30003127, 30003128, 30003129, 30003130, 30003131, 30003132,
+    30003133, 30003134, 30003135, 30003136, 30003137, 30003138, 30003139,
+    30003140, 30003141, 30003142, 30003143, 30003144, 30003145, 30003146,
+    30003147, 30003148, 30003149, 30003150, 30003151, 30003152, 30003153,
+    30003154, 30003155, 30003156, 30003157, 30003158, 30003159, 30003160,
+    30003161, 30003162, 30003163, 30003164, 30003165, 30003166, 30003167,
+    30003168, 30003169, 30003170, 30003171, 30003172, 30003173, 30003174,
+    30003175, 30003176, 30003177, 30003178, 30003179, 30003180, 30003181,
+    30003182
 }
 
 logger = logging.getLogger('testrattingcapitals')
@@ -162,20 +68,12 @@ def process(zkill):
         return None
 
     # is in esoteria
-    # This is temporary while we debug why some kills are coming across with no solar system name
-    try:
-        kill_system = zkill['package']['killmail']['solarSystem']['name']
-    except:
-        logger.warn('{} processor DEPLOYMENT BAD_DRAGON upcoming no solar system error. Full object: {}'.format(
-            zkill['package']['killID'],
-            json.dumps(zkill)
-        ))
-        raise
-    if kill_system not in ESOTERIA_SYSTEM_NAMES:
+    kill_system = zkill['package']['killmail']['solarSystem']['id']
+    if kill_system not in ESOTERIA_SYSTEM_IDS:
         logger.debug(
             '{} processor DEPLOYMENT_BAD_DRAGON REJECT - system_id not in {}'.format(
                 zkill['package']['killID'],
-                'ESOTERIA_SYSTEM_NAMES'
+                'ESOTERIA_SYSTEM_IDS'
             )
         )
         return None

@@ -56,4 +56,3 @@ class EveSolarSystem(Base):
     constellation_id = Column(Integer, nullable=True)
     region_id = Column(Integer, nullable=True)
     name = Column(String(50), nullable=True)
-

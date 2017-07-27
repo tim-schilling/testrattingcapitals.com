@@ -64,17 +64,7 @@ def convert_zk_response_to_tracked_kill(tracking_label, zk):
     tk.kill_timestamp = convert_zk_timestamp_to_datetime(
         pk['killmail']['killTime']
     )
-    # This is temporary while we debug why some kills are coming across with no ship name
-    try:
-        tk.ship_id = pk['killmail']['victim']['shipType']['id']
-        tk.ship_name = pk['killmail']['victim']['shipType']['name']
-    except:
-        logger.error('{}-{} service - kill has no shipType or shipName. This will fail. full_response:\n{}\n\n'.format(
-            pk['killID'],
-            tracking_label,
-            json.dumps(zk)
-        ))
-        raise
+    tk.ship_id = pk['killmail']['victim']['shipType']['id']
     # structure kills do not have an associated character
     if 'character' in pk['killmail']['victim']:
         tk.character_id = pk['killmail']['victim']['character']['id']
@@ -87,8 +77,21 @@ def convert_zk_response_to_tracked_kill(tracking_label, zk):
         tk.alliance_name = pk['killmail']['victim']['alliance']['name']
     tk.total_value = pk['zkb']['totalValue']
     tk.system_id = pk['killmail']['solarSystem']['id']
-    tk.system_name = pk['killmail']['solarSystem']['name']
     tk.more_info_href = 'https://zkillboard.com/kill/{}/'.format(pk['killID'])
     tk.full_response = json.dumps(zk)
+
+    """These entities names are occasionally not included in the zkrq killmail
+    object we get from upstream for whatever reason.
+
+    As a workaround, we have the repository attach them from a lookup table
+    containing a dump of all CCP item and system IDs mapped to their names in en-US.
+
+    This is ugly, and I don't like doing business logic work at the repo layer, but
+    opening up additional sessions per record is expensive.
+    """
+    # tk.ship_name = pk['killmail']['victim']['shipType']['name']
+    # tk.system_name = pk['killmail']['solarSystem']['name']
+    tk.ship_name = ''
+    tk.system_name = ''
 
     return tk
