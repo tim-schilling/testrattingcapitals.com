@@ -32,3 +32,28 @@ class TrackedKill(Base):
     full_response = Column(Text, nullable=False)
 
     Index('idx_tracked_kill_by_label_timestamp', kill_tracking_label, kill_timestamp.desc(), kill_id, more_info_href, unique=True)
+
+
+class EveItem(Base):
+    """Model defining any item in the game.
+
+    Loaded from CCP database dumps. See: https://developers.eveonline.com/resource/resources.
+    """
+    __tablename__ = 'eve_item'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(Text, nullable=True)
+
+
+class EveSolarSystem(Base):
+    """Model defining an EVE Online solar system.
+
+    Loaded from CCP database dumps. See: https://developers.eveonline.com/resource/resources.
+    """
+    __tablename__ = 'eve_system'
+
+    id = Column(Integer, primary_key=True)
+    constellation_id = Column(Integer, nullable=True)
+    region_id = Column(Integer, nullable=True)
+    name = Column(String(50), nullable=True)
+

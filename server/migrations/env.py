@@ -6,7 +6,7 @@ from logging.config import fileConfig
 # Hack around alembic's weird handling of PYTHONPATH
 import os
 import sys
-sys.path.append(os.getcwd() + '/testrattingcapitals')
+sys.path.append(os.getcwd())
 
 from testrattingcapitals.schema import Base
 # this is the Alembic Config object, which provides
