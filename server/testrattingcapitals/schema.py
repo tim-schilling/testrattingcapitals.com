@@ -36,16 +36,16 @@ class TrackedKill(Base):
     kill_id = Column(Integer, primary_key=True)
     kill_timestamp = Column(DateTime, nullable=False)
     ship_id = Column(Integer, nullable=False)
-    ship_name = Column(String(50), nullable=False)
-    character_id = Column(Integer, nullable=True)
-    character_name = Column(String(255), nullable=True)
+    ship_name = Column(String(50), nullable=False, default='')  # deprecated
+    character_id = Column(Integer)
+    character_name = Column(String(255))  # deprecated
     corporation_id = Column(Integer, nullable=False)
-    corporation_name = Column(String(255), nullable=False)
+    corporation_name = Column(String(255), nullable=False, default='')  # deprecated
     alliance_id = Column(Integer)
-    alliance_name = Column(String(255))
+    alliance_name = Column(String(255))  # deprecated
     total_value = Column(Float, nullable=False)
     system_id = Column(Integer, nullable=False)
-    system_name = Column(String(50), nullable=False)
+    system_name = Column(String(50), nullable=False, default='')  # deprecated
     more_info_href = Column(String(255), nullable=False)
     full_response = Column(Text, nullable=False)
 
