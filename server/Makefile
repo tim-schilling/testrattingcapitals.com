@@ -57,7 +57,7 @@ migrate: virtualenv
 	. $(VENV_ACTIVATE) ; PYTHONPATH=$(PYTHONPATH) $(DB_MIGRATION_COMMAND)
 
 run-daemon: virtualenv migrate
-	. $(VENV_ACTIVATE) ; python -m "testrattingcapitals.bin.daemon"
+	. $(VENV_ACTIVATE) ; TICK_RATE=1 PERSIST_ALL=1 python -m "testrattingcapitals.bin.daemon"
 
 run-reprocessor: virtualenv migrate
-	. $(VENV_ACTIVATE) ; python -m "testrattingcapitals.bin.reprocessor"
+	. $(VENV_ACTIVATE) ; TICK_RATE=1 PERSIST_ALL=1 python -m "testrattingcapitals.bin.reprocessor"
