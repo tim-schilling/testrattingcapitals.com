@@ -5,6 +5,7 @@
 # and therapy
 
 REQUIREMENTS = \
+	requirements-cacher.txt \
 	requirements-daemon.txt \
 	requirements-reprocessor.txt \
 	requirements-testing.txt \
