@@ -50,7 +50,7 @@ def add(tracked_kill):
             logger.debug('{}-{} already in persistent storage. Discarding.'.format(tracked_kill.kill_id, tracked_kill.kill_tracking_label))
 
 
-def get(tracking_label=None):
+def get(tracking_label):
     """Retrieve all records, optionally filtering by tracking_label.
     """
     results = []
@@ -63,3 +63,24 @@ def get(tracking_label=None):
             result_query = context.session.query(TrackedKill).all()
         results = [r for r in result_query]
     return results
+
+
+def get_since(tracking_label, start_date):
+    """Retrieve all kills for a tracking_label since start_date.
+    """
+    logger.debug('{}-{} repository querying get_since'.format(
+        tracking_label,
+        start_date.isoformat()
+    ))
+    with Context() as context:
+        return context.session.query(
+            TrackedKill.kill_tracking_label,
+            TrackedKill.kill_timestamp,
+            TrackedKill.kill_id,
+            TrackedKill.more_info_href
+        ).filter(
+            TrackedKill.kill_tracking_label == tracking_label,
+            TrackedKill.kill_timestamp >= start_date
+        ).order_by(
+            TrackedKill.kill_timestamp.desc()
+        ).all()

@@ -86,3 +86,9 @@ def test_convert_zk_response_to_tracked_kill():
     assert result.alliance_name is None
     assert '' == result.ship_name
     assert '' == result.system_name
+
+
+def test_validate_start_date():
+    with pytest.raises(TypeError):
+        unit.validate_start_date(None)
+    unit.validate_start_date(datetime(2017, 1, 1))

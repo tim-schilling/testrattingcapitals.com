@@ -50,11 +50,29 @@ def get(tracking_label=None):
     return tracked_kill_repository.get(tracking_label)
 
 
+def get_since(tracking_label, start_date):
+    """Retrieve all kills for a tracking_label since start_date.
+    """
+    logger.debug('{}-{} service querying get_since'.format(
+        tracking_label,
+        start_date
+    ))
+    validate_tracking_label(tracking_label)
+    validate_start_date(start_date)
+
+    return tracked_kill_repository.get_since(tracking_label, start_date)
+
+
 def validate_tracking_label(tracking_label):
     if not isinstance(tracking_label, str):
         raise(TypeError('tracking_label'))
     if tracking_label == '':
         raise(ValueError('tracking_label'))
+
+
+def validate_start_date(start_date):
+    if not isinstance(start_date, datetime):
+        raise(TypeError('start_date'))
 
 
 def validate_zk_response(zk_response):
