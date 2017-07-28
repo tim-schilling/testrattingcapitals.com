@@ -5,7 +5,8 @@
 # and therapy
 
 REQUIREMENTS = \
-	requirements.txt \
+	requirements-daemon.txt \
+	requirements-reprocessor.txt \
 	requirements-testing.txt \
 
 DB_MIGRATION_COMMAND ?= alembic upgrade head

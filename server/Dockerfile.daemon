@@ -2,7 +2,7 @@
 FROM library/python:3.6.2-alpine3.6
 
 ARG EXEC_UID=1999
-ARG REQUIREMENTS="requirements.txt"
+ARG REQUIREMENTS="requirements-daemon.txt"
 
 RUN apk add --no-cache \
     sqlite
