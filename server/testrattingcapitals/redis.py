@@ -30,7 +30,10 @@ _singleton = None
 def get_redis_singleton():
     global _singleton
     if not _singleton:
+        logger.debug('Redis connection pool initializing')
         _singleton = StrictRedis.from_url(
             os.getenv('REDIS_CONNECTION_STRING', DEFAULT_REDIS_CONNECTION_STRING)
         )
+        _singleton.ping()
+        logger.info('Redis connection pool initialized')
     return _singleton

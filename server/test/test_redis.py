@@ -23,6 +23,9 @@ class MockStrictRedis(object):
     def __init__(self, url):
         self.url = url
 
+    def ping(self):
+        pass
+
     @staticmethod
     def from_url(url):
         return MockStrictRedis('unit-test-url')
