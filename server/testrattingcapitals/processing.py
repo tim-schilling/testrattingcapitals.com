@@ -44,5 +44,5 @@ def process(zkill):
         if proc_result is not None:
             labels.add(proc_result)
 
-    logger.info('{} processed. Labels attached: {}'.format(zkill['package']['killID'], labels or '(none)'))
+    logger.debug('{} processed. Labels attached: {}'.format(zkill['package']['killID'], labels or '(none)'))
     return labels
