@@ -16,6 +16,7 @@
   <http://www.gnu.org/licenses/>.
 """
 
+from datetime import date, datetime
 import json
 from sqlalchemy import Column, DateTime, Float, Index, Integer, String, \
     Text
@@ -29,12 +30,15 @@ class AlchemyEncoder(json.JSONEncoder):
     """ JSONEncoder for SQLalchemy declarative objects
     """
 
-    """
-    This bit shamelessly jacked from a Stack Overflow response
-    by user Sasha B. Since there's no license associated, a shoutout will do :)
-    https://stackoverflow.com/a/10664192/929861
-    """
     def default(self, obj):
+        if isinstance(obj, datetime) or isinstance(obj, date):
+            return obj.isoformat()
+
+        """
+        This bit shamelessly jacked from a Stack Overflow response
+        by user Sasha B. Since there's no license associated, a shoutout will do :)
+        https://stackoverflow.com/a/10664192/929861
+        """
         if isinstance(obj.__class__, DeclarativeMeta):
             # an SQLAlchemy class
             fields = {}
