@@ -17,8 +17,11 @@
 """
 
 import json
+import logging
 from testrattingcapitals import cache_repository
 from testrattingcapitals.schema import AlchemyEncoder, TrackedKill
+
+logger = logging.getLogger('testrattingcapitals')
 
 
 def validate_tracking_label(tracking_label):
@@ -59,14 +62,16 @@ def json_to_tracked_kill(kill_json):
 
 
 def tracked_kill_to_json(tracked_kill):
-    if not isinstance(tracked_kill, TrackedKill) and not isinstance(tracked_kill, list):
+    if not tracked_kill:
         raise(TypeError('tracked_kill'))
 
     return json.dumps(tracked_kill, cls=AlchemyEncoder)
 
 
 def get_latest_tracked_kill_for_tracking_label(tracking_label):
+    logger.debug('cacher service get latest - {}'.format(tracking_label))
     validate_tracking_label(tracking_label)
+
     response = cache_repository.get_latest_for_label(tracking_label)
     if response:
         return json_to_tracked_kill(response)
@@ -75,6 +80,10 @@ def get_latest_tracked_kill_for_tracking_label(tracking_label):
 
 
 def set_latest_tracked_kill_for_tracking_label(tracking_label, tracked_kill):
+    logger.debug('cacher service set latest - {} - {}'.format(
+        tracking_label,
+        tracked_kill
+    ))
     validate_tracking_label(tracking_label)
     validate_tracked_kill(tracked_kill)
 
@@ -83,6 +92,7 @@ def set_latest_tracked_kill_for_tracking_label(tracking_label, tracked_kill):
 
 
 def get_recent_tracked_kills_for_tracking_label(tracking_label):
+    logger.debug('cacher service.get recent - {}'.format(tracking_label))
     validate_tracking_label(tracking_label)
 
     response = cache_repository.get_recents_for_label(tracking_label)
@@ -102,6 +112,10 @@ def get_recent_tracked_kills_for_tracking_label(tracking_label):
 
 
 def set_recent_tracked_kills_for_tracking_label(tracking_label, tracked_kill_list):
+    logger.debug('cacher service.set recent - {} - {}'.format(
+        tracking_label,
+        tracked_kill_list
+    ))
     validate_tracking_label(tracking_label)
     validate_tracked_kill_list(tracked_kill_list)
 
