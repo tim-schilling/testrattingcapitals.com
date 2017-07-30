@@ -16,12 +16,39 @@
   <http://www.gnu.org/licenses/>.
 """
 
+import json
 from sqlalchemy import Column, DateTime, Float, Index, Integer, String, \
     Text
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 
 
 Base = declarative_base()
+
+
+class AlchemyEncoder(json.JSONEncoder):
+    """ JSONEncoder for SQLalchemy declarative objects
+    """
+
+    """
+    This bit shamelessly jacked from a Stack Overflow response
+    by user Sasha B. Since there's no license associated, a shoutout will do :)
+    https://stackoverflow.com/a/10664192/929861
+    """
+    def default(self, obj):
+        if isinstance(obj.__class__, DeclarativeMeta):
+            # an SQLAlchemy class
+            fields = {}
+            for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
+                data = obj.__getattribute__(field)
+                try:
+                    json.dumps(data)  # this will fail on non-encodable values, like other classes
+                    fields[field] = data
+                except TypeError:
+                    fields[field] = None
+            # a json-encodable dict
+            return fields
+
+        return json.JSONEncoder.default(self, obj)
 
 
 class TrackedKill(Base):
