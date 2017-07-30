@@ -16,7 +16,7 @@
   <http://www.gnu.org/licenses/>.
 """
 
-from datetime import date, datetime
+import datetime
 import json
 from sqlalchemy import Column, DateTime, Float, Index, Integer, String, \
     Text
@@ -26,14 +26,11 @@ from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 Base = declarative_base()
 
 
-class AlchemyEncoder(json.JSONEncoder):
+class DeclarativeBaseJSONEncoder(json.JSONEncoder):
     """ JSONEncoder for SQLalchemy declarative objects
     """
 
     def default(self, obj):
-        if isinstance(obj, datetime) or isinstance(obj, date):
-            return obj.isoformat()
-
         """
         This bit shamelessly jacked from a Stack Overflow response
         by user Sasha B. Since there's no license associated, a shoutout will do :)
@@ -45,14 +42,41 @@ class AlchemyEncoder(json.JSONEncoder):
             for field in [x for x in dir(obj) if not x.startswith('_') and x != 'metadata']:
                 data = obj.__getattribute__(field)
                 try:
-                    json.dumps(data)  # this will fail on non-encodable values, like other classes
-                    fields[field] = data
+                    # modify to parse datetimes as isoformat strings
+                    if isinstance(data, datetime.datetime):
+                        fields[field] = data.isoformat()
+                    else:
+                        json.dumps(data)  # this will fail on non-encodable values, like other classes
+                        fields[field] = data
                 except TypeError:
                     fields[field] = None
             # a json-encodable dict
             return fields
 
         return json.JSONEncoder.default(self, obj)
+
+
+def date_hook(json_dict=None):
+    for (key, value) in json_dict.items():
+        try:
+            json_dict[key] = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
+        except:
+            pass
+    return json_dict
+
+
+def declarative_base_to_json(obj):
+    if not obj:
+        return None
+
+    return json.dumps(obj, cls=DeclarativeBaseJSONEncoder)
+
+
+def json_to_declarative_base(BaseType, json_obj):
+    if not BaseType or not isinstance(json_obj, str):
+        return None
+
+    return BaseType(**json.loads(json_obj, object_hook=date_hook))
 
 
 class TrackedKill(Base):
@@ -82,6 +106,14 @@ class TrackedKill(Base):
 
     Index('idx_tracked_kill_by_label_timestamp', kill_tracking_label, kill_timestamp.desc(), kill_id, more_info_href, unique=True)
 
+    @staticmethod
+    def to_json(obj):
+        return declarative_base_to_json(obj)
+
+    @staticmethod
+    def from_json(obj):
+        return json_to_declarative_base(TrackedKill, obj)
+
 
 class EveItem(Base):
     """Model defining any item in the game.
@@ -92,6 +124,14 @@ class EveItem(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=True)
+
+    @staticmethod
+    def to_json(obj):
+        return declarative_base_to_json(obj)
+
+    @staticmethod
+    def from_json(obj):
+        return json_to_declarative_base(EveItem, obj)
 
 
 class EveSolarSystem(Base):
@@ -105,3 +145,11 @@ class EveSolarSystem(Base):
     constellation_id = Column(Integer, nullable=True)
     region_id = Column(Integer, nullable=True)
     name = Column(String(50), nullable=True)
+
+    @staticmethod
+    def to_json(obj):
+        return declarative_base_to_json(obj)
+
+    @staticmethod
+    def from_json(obj):
+        return json_to_declarative_base(EveSolarSystem, obj)
