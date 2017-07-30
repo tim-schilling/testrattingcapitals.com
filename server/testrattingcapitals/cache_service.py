@@ -18,7 +18,6 @@
 
 import json
 import logging
-from testrattingcapitals import cache_repository
 from testrattingcapitals.schema import AlchemyEncoder, TrackedKill
 
 logger = logging.getLogger('testrattingcapitals')
@@ -66,58 +65,3 @@ def tracked_kill_to_json(tracked_kill):
         raise(TypeError('tracked_kill'))
 
     return json.dumps(tracked_kill, cls=AlchemyEncoder)
-
-
-def get_latest_tracked_kill_for_tracking_label(tracking_label):
-    logger.debug('cacher service get latest - {}'.format(tracking_label))
-    validate_tracking_label(tracking_label)
-
-    response = cache_repository.get_latest_for_label(tracking_label)
-    if response:
-        return json_to_tracked_kill(response)
-    else:
-        return None
-
-
-def set_latest_tracked_kill_for_tracking_label(tracking_label, tracked_kill):
-    logger.debug('cacher service set latest - {} - {}'.format(
-        tracking_label,
-        tracked_kill
-    ))
-    validate_tracking_label(tracking_label)
-    validate_tracked_kill(tracked_kill)
-
-    as_json = tracked_kill_to_json(tracked_kill)
-    cache_repository.set_latest_for_label(tracking_label, as_json)
-
-
-def get_recent_tracked_kills_for_tracking_label(tracking_label):
-    logger.debug('cacher service.get recent - {}'.format(tracking_label))
-    validate_tracking_label(tracking_label)
-
-    response = cache_repository.get_recents_for_label(tracking_label)
-    if response:
-        result = []
-        list_json_objects = json.loads(response)
-        response = None
-        while list_json_objects:
-            result.append(
-                dict_to_tracked_kill(
-                    list_json_objects.pop(0)
-                )
-            )
-        return result
-    else:
-        return []
-
-
-def set_recent_tracked_kills_for_tracking_label(tracking_label, tracked_kill_list):
-    logger.debug('cacher service.set recent - {} - {}'.format(
-        tracking_label,
-        tracked_kill_list
-    ))
-    validate_tracking_label(tracking_label)
-    validate_tracked_kill_list(tracked_kill_list)
-
-    as_json = tracked_kill_to_json(tracked_kill_list)
-    cache_repository.set_recents_for_label(tracking_label, as_json)

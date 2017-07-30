@@ -17,13 +17,13 @@
   <http://www.gnu.org/licenses/>.
 """
 
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
 import logging
 import os
 import signal
 import sys
 import time
-from testrattingcapitals import cache_service, tracked_kill_service
+# from testrattingcapitals import cache_service, tracked_kill_service
 from testrattingcapitals.processors import \
     all_processor, \
     deployment_bad_dragon_processor, \
@@ -60,16 +60,8 @@ def configure_logging():
 
 def processing_loop():
     logger.debug('Processing loop tick')
-    start_date = datetime.utcnow() - timedelta(days=30)
-    logger.debug('start date: {}'.format(start_date.isoformat()))
     for processor in PROCESSORS:
-        tracking_label = processor.TRACKING_LABEL
-        db_set = tracked_kill_service.get_since(tracking_label, start_date)
-        if db_set:
-            if len(db_set) > 0:
-                latest = db_set[0]
-                cache_service.set_latest_tracked_kill_for_tracking_label(tracking_label, latest)
-            cache_service.set_recent_tracked_kills_for_tracking_label(tracking_label, db_set)
+        logger.debug('tick')
 
 
 def main():
