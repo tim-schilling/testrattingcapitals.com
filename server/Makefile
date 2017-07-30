@@ -63,3 +63,6 @@ run-daemon: virtualenv migrate
 
 run-reprocessor: virtualenv migrate
 	. $(VENV_ACTIVATE) ; TICK_RATE=1 PERSIST_ALL=1 python -m "testrattingcapitals.bin.reprocessor"
+
+run-cacher: virtualenv migrate
+	. $(VENV_ACTIVATE) ; TICK_RATE=1 PERSIST_ALL=1 python -m "testrattingcapitals.bin.cacher"
