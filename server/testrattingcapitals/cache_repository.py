@@ -16,7 +16,6 @@
   <http://www.gnu.org/licenses/>.
 """
 
-import json
 from testrattingcapitals import redis
 
 
@@ -24,10 +23,7 @@ def get_latest_for_label(label):
     conn = redis.get_redis_singleton()
 
     response = conn.get('LATEST_{}'.format(label))
-    if response:
-        return json.loads(response)
-    else:
-        return []
+    return response
 
 
 def set_latest_for_label(label, latest):
@@ -36,9 +32,9 @@ def set_latest_for_label(label, latest):
     key_to_write = 'LATEST_{}'.format(label)
     value_to_write = None
     if latest:
-        value_to_write = json.dumps(latest)
+        value_to_write = latest
     else:
-        value_to_write = json.dumps([])
+        value_to_write = '[]'
 
     conn.set(key_to_write, value_to_write)
 
@@ -47,10 +43,7 @@ def get_recents_for_label(label):
     conn = redis.get_redis_singleton()
 
     response = conn.get('RECENTS_{}'.format(label))
-    if response:
-        return json.loads(response)
-    else:
-        return []
+    return response
 
 
 def set_recents_for_label(label, recent_set=[]):
@@ -59,8 +52,8 @@ def set_recents_for_label(label, recent_set=[]):
     key_to_write = 'RECENTS_{}'.format(label)
     value_to_write = None
     if recent_set:
-        value_to_write = json.dumps(recent_set)
+        value_to_write = recent_set
     else:
-        value_to_write = json.dumps([])
+        value_to_write = []
 
     conn.set(key_to_write, value_to_write)

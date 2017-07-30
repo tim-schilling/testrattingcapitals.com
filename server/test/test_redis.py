@@ -27,7 +27,7 @@ class MockStrictRedis(object):
         pass
 
     @staticmethod
-    def from_url(url):
+    def from_url(url, *args, **kwargs):
         return MockStrictRedis('unit-test-url')
 
 
