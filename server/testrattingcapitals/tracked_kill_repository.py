@@ -53,16 +53,13 @@ def add(tracked_kill):
 def get(tracking_label):
     """Retrieve all records, optionally filtering by tracking_label.
     """
-    results = []
     with Context() as context:
         if tracking_label:
-            result_query = context.session.query(TrackedKill).filter(
+            return context.session.query(TrackedKill).filter(
                 TrackedKill.kill_tracking_label == tracking_label
-            )
+            ).all()
         else:
-            result_query = context.session.query(TrackedKill).all()
-        results = [r for r in result_query]
-    return results
+            return context.session.query(TrackedKill).all()
 
 
 def get_since(tracking_label, start_date):
@@ -73,7 +70,7 @@ def get_since(tracking_label, start_date):
         start_date.isoformat()
     ))
     with Context() as context:
-        return context.session.query(
+        response = context.session.query(
             TrackedKill.kill_tracking_label,
             TrackedKill.kill_timestamp,
             TrackedKill.kill_id,
@@ -84,3 +81,10 @@ def get_since(tracking_label, start_date):
         ).order_by(
             TrackedKill.kill_timestamp.desc()
         ).all()
+
+        # These are tuples. Parse to full objects.
+        result = []
+        while (response):
+            value = TrackedKill(**response.pop(0)._asdict())
+            result.append(value)
+        return result
