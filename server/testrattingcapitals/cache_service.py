@@ -16,11 +16,13 @@
   <http://www.gnu.org/licenses/>.
 """
 
-import json
+from datetime import datetime, timedelta
 import logging
-from testrattingcapitals.schema import AlchemyEncoder, TrackedKill
+from testrattingcapitals import cache_repository
 
 logger = logging.getLogger('testrattingcapitals')
+
+DEFAULT_EXPIRATION_CUTOFF_DAYS = 30
 
 
 def validate_tracking_label(tracking_label):
@@ -39,6 +41,9 @@ def validate_tracked_kill(tracked_kill):
 
 
 def validate_tracked_kill_list(tracked_kill_list):
+    if not tracked_kill_list:
+        return
+
     if not isinstance(tracked_kill_list, list):
         raise(TypeError('tracked_kill_list'))
 
@@ -46,22 +51,31 @@ def validate_tracked_kill_list(tracked_kill_list):
         validate_tracked_kill(kill)
 
 
-def dict_to_tracked_kill(kill_dict):
-    if not isinstance(kill_dict, dict):
-        raise(TypeError('kill_dict'))
-
-    return TrackedKill(**kill_dict)
+def validate_exclusive_end_date(exclusive_end_date):
+    if exclusive_end_date and not isinstance(exclusive_end_date, datetime):
+        raise(TypeError('exclusive_end_date'))
 
 
-def json_to_tracked_kill(kill_json):
-    if not isinstance(kill_json, str):
-        raise(TypeError('kill_json'))
+def set_for_tracking_label(tracking_label, tracked_kill_list):
+    validate_tracking_label(tracking_label)
+    validate_tracked_kill_list(tracked_kill_list)
 
-    return TrackedKill(**json.loads(kill_json))
+    # find the latest
+    # these come from sqlite in desc order, so it's just the first
+    if tracked_kill_list and len(tracked_kill_list):
+        latest = tracked_kill_list[0]
+    else:
+        latest = None
+
+    cache_repository.set_latest_for_label(tracking_label, latest)
+    cache_repository.set_recents_for_label(tracking_label, tracked_kill_list)
 
 
-def tracked_kill_to_json(tracked_kill):
-    if not tracked_kill:
-        raise(TypeError('tracked_kill'))
+def expire_recents_for_label(tracking_label, exclusive_end_date=None):
+    validate_tracking_label(tracking_label)
+    validate_exclusive_end_date(exclusive_end_date)
 
-    return json.dumps(tracked_kill, cls=AlchemyEncoder)
+    if not exclusive_end_date:
+        exclusive_end_date = datetime.utcnow() - timedelta(days=DEFAULT_EXPIRATION_CUTOFF_DAYS)
+
+    cache_repository.delete_expired_recents_for_label(tracking_label, exclusive_end_date)
