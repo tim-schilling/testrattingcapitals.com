@@ -63,7 +63,7 @@ def set_recents_for_label(label, values):
     conn = redis.get_redis_singleton()
 
     key = RECENT_KEY_FORMAT.format(label)
-    for value in values:
+    for value in values or []:
         score = unix_datetime.datetime_to_unix(value.kill_timestamp)
         value_as_json = TrackedKill.to_json(value)
         conn.zadd(key, score, value_as_json)
