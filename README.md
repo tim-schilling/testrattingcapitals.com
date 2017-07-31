@@ -6,9 +6,8 @@ Reads in a stream of all "kill" events in EVE Online and stores interesting
 (read: hilariously embarassing) ones.
 
 Version 2.0.0 is under active development and not ready for release. Check out
-[version1](https://github.com/tonymke/testrattingcapitals.com/tree/release/1.0.0)
-on the master branch for now - it's what's live at
-[testrattingcapitals.com](https://testrattingcapitals.com).
+the [version1](https://github.com/tonymke/testrattingcapitals.com/tree/release/1.0.0)
+branch for now - it's what's live at [testrattingcapitals.com](https://testrattingcapitals.com).
 
 ## Services
 
@@ -24,6 +23,7 @@ on the master branch for now - it's what's live at
 
 * [daemon](https://hub.docker.com/r/tonymke/testrattingcapitals-daemon/)
 * [reprocessor](https://hub.docker.com/r/tonymke/testrattingcapitals-reprocessor/)
+* [cacher](https://hub.docker.com/r/tonymke/testrattingcapitals-cacher/)
 
 ## License
 

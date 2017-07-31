@@ -1,0 +1,29 @@
+# Runtime image
+FROM library/python:3.6.2-alpine3.6
+
+ARG EXEC_UID=1999
+ARG REQUIREMENTS="requirements-cacher.txt"
+
+RUN apk add --no-cache \
+    sqlite
+
+COPY . /app
+RUN rm -rf /app/venv && \
+    rm -rf /app/db.sqlite3 && \
+    find . -iname "*.pyc" -type f | xargs -n 10 rm -f && \
+    find . -name __pycache__ -type d | xargs -n 10 rm -rf
+WORKDIR /app
+
+RUN pip install -U pip && \
+    echo $REQUIREMENTS | xargs -n 1 pip install -r
+
+COPY ./scripts/cacher-entrypoint.sh /app/docker-entrypoint.sh
+
+RUN mkdir /data && \
+    adduser -u $EXEC_UID -s /bin/sh -D runtime_user && \
+    chown -R runtime_user:runtime_user /app /data
+USER runtime_user
+
+ENV DB_CONNECTION_STRING="sqlite:////data/db.sqlite3"
+ENV REDIS_CONNECTION_STRING="redis://redis:6379/0"
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
