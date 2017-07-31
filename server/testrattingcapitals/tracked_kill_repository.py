@@ -70,21 +70,9 @@ def get_since(tracking_label, start_date):
         start_date.isoformat()
     ))
     with Context() as context:
-        response = context.session.query(
-            TrackedKill.kill_tracking_label,
-            TrackedKill.kill_timestamp,
-            TrackedKill.kill_id,
-            TrackedKill.more_info_href
-        ).filter(
+        return context.session.query(TrackedKill).filter(
             TrackedKill.kill_tracking_label == tracking_label,
             TrackedKill.kill_timestamp >= start_date
         ).order_by(
             TrackedKill.kill_timestamp.desc()
         ).all()
-
-        # These are tuples. Parse to full objects.
-        result = []
-        while (response):
-            value = TrackedKill(**response.pop(0)._asdict())
-            result.append(value)
-        return result
