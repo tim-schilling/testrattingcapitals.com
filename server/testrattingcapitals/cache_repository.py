@@ -17,43 +17,62 @@
 """
 
 from testrattingcapitals import redis
+from testrattingcapitals.util import unix_datetime
+from testrattingcapitals.schema import TrackedKill
+
+LATEST_KEY_FORMAT = 'LATEST_{}'
+RECENT_KEY_FORMAT = 'RECENT_{}'
 
 
 def get_latest_for_label(label):
     conn = redis.get_redis_singleton()
+    response = conn.get(LATEST_KEY_FORMAT.format(label))
+    if response:
+        return TrackedKill.from_json(response)
+    else:
+        return None
 
-    response = conn.get('LATEST_{}'.format(label))
+
+def set_latest_for_label(label, value):
+    conn = redis.get_redis_singleton()
+    if value:
+        value_as_json = TrackedKill.to_json(value)
+        conn.set(LATEST_KEY_FORMAT.format(label), value_as_json)
+    else:
+        conn.delete(LATEST_KEY_FORMAT.format(label))
+
+
+def get_recents_for_label(label, start_date):
+    conn = redis.get_redis_singleton()
+
+    start_date_score = unix_datetime.datetime_to_unix(start_date)
+
+    response = conn.zrevrangebyscore(
+        RECENT_KEY_FORMAT.format(label),
+        '+inf',
+        start_date_score
+    ) or []
+
+    for index, value in enumerate(response):
+        response[index] = TrackedKill.from_json(response[index])
+
     return response
 
 
-def set_latest_for_label(label, latest):
+def set_recents_for_label(label, values):
     conn = redis.get_redis_singleton()
 
-    key_to_write = 'LATEST_{}'.format(label)
-    value_to_write = None
-    if latest:
-        value_to_write = latest
-    else:
-        value_to_write = '[]'
-
-    conn.set(key_to_write, value_to_write)
+    key = RECENT_KEY_FORMAT.format(label)
+    for value in values:
+        score = unix_datetime.datetime_to_unix(value.kill_timestamp)
+        value_as_json = TrackedKill.to_json(value)
+        conn.zadd(key, score, value_as_json)
 
 
-def get_recents_for_label(label):
+def delete_expired_recents_for_label(label, exclusive_end_date):
     conn = redis.get_redis_singleton()
 
-    response = conn.get('RECENTS_{}'.format(label))
-    return response
+    key = RECENT_KEY_FORMAT.format(label)
+    score_cutoff = '({}'.format(unix_datetime.datetime_to_unix(exclusive_end_date))
 
-
-def set_recents_for_label(label, recent_set=[]):
-    conn = redis.get_redis_singleton()
-
-    key_to_write = 'RECENTS_{}'.format(label)
-    value_to_write = None
-    if recent_set:
-        value_to_write = recent_set
-    else:
-        value_to_write = []
-
-    conn.set(key_to_write, value_to_write)
+    conn.zremrangebyscore(key, '-inf', score_cutoff)
