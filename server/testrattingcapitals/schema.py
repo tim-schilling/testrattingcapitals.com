@@ -31,6 +31,9 @@ class DeclarativeBaseJSONEncoder(json.JSONEncoder):
     """
 
     def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return obj.isoformat()
+
         """
         This bit shamelessly jacked from a Stack Overflow response
         by user Sasha B. Since there's no license associated, a shoutout will do :)
