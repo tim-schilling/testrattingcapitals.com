@@ -15,6 +15,9 @@ DB_MIGRATION_COMMAND ?= alembic upgrade head
 DB_PATH ?= db.sqlite3
 DB_CONNECTION_STRING ?= sqlite:///$(DB_PATH)
 
+FLASK_HOST ?= 127.0.0.1
+FLASK_PORT ?= 8080
+
 MIGRATIONS_DIR ?= migrations
 
 PYTHON_BIN ?= python3
@@ -69,4 +72,7 @@ run-cacher: virtualenv migrate
 	. $(VENV_ACTIVATE) ; TICK_RATE=1 PERSIST_ALL=1 python -m "testrattingcapitals.bin.cacher"
 
 run-api: virtualenv migrate
-	. $(VENV_ACTIVATE) ; python -m "testrattingcapitals.bin.api"
+	. $(VENV_ACTIVATE) ; PERSIST_ALL=1 FLASK_DEBUG=1 FLASK_APP="testrattingcapitals/bin/api.py" flask run --host=$(FLASK_HOST) --port=$(FLASK_PORT)
+
+run-api-uwsgi: virtualenv migrate
+	. $(VENV_ACTIVATE) ; PERSIST_ALL=1 uwsgi "uwsgi.ini"
