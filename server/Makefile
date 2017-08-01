@@ -5,6 +5,7 @@
 # and therapy
 
 REQUIREMENTS = \
+	requirements-api.txt \
 	requirements-cacher.txt \
 	requirements-daemon.txt \
 	requirements-reprocessor.txt \
@@ -66,3 +67,6 @@ run-reprocessor: virtualenv migrate
 
 run-cacher: virtualenv migrate
 	. $(VENV_ACTIVATE) ; TICK_RATE=1 PERSIST_ALL=1 python -m "testrattingcapitals.bin.cacher"
+
+run-api: virtualenv migrate
+	. $(VENV_ACTIVATE) ; python -m "testrattingcapitals.bin.api"
