@@ -30,4 +30,4 @@ def setup_routes(app, api):
         TypeError('api must be of type ', type(Api))
 
     api.add_resource(HealthController, '/', '/health')
-    api.add_resource(LatestController, '/api/v2.0.0/latest')
+    api.add_resource(LatestController, '/api/v2/latest')
