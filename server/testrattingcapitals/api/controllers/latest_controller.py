@@ -18,6 +18,8 @@
 
 from flask import jsonify
 from flask_restful import Resource
+import json
+import logging
 import os
 
 from testrattingcapitals import cache_service
@@ -26,6 +28,8 @@ from testrattingcapitals.processors import \
     deployment_bad_dragon_processor, \
     ratting_capital_processor, \
     vni_processor
+
+logger = logging.getLogger('testrattingcapitals')
 
 PROCESSORS = [
     deployment_bad_dragon_processor,
@@ -41,9 +45,16 @@ class LatestController(Resource):
     def get(self):
         result = dict()
         for proc in PROCESSORS:
+            kill = cache_service.get_latest_for_tracking_label(
+                proc.TRACKING_LABEL
+            )
+
+            # unmarshal the inner killmail json at the edge for now
+            # TODO think of a better way to deal with the 'json in the text field nonsense
+            if kill and kill.full_response:
+                kill.full_response = json.loads(kill.full_response)
+
             result[proc.TRACKING_LABEL] = {
-                'kill': cache_service.get_latest_for_tracking_label(
-                    proc.TRACKING_LABEL
-                )
+                'kill': kill
             }
         return jsonify(result)
