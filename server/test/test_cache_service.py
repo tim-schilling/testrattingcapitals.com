@@ -34,6 +34,12 @@ class MockCacheRepository(object):
         self.called_with_kwargs = called_kwargs
         return self.to_return
 
+    def get_latest_for_label(self, *args, **kwargs):
+        return self._super_secret_test_handler('get_latest_for_label', args, kwargs)
+
+    def get_recents_for_label(self, *args, **kwargs):
+        return self._super_secret_test_handler('get_recents_for_label', args, kwargs)
+
     def set_latest_for_label(self, *args, **kwargs):
         return self._super_secret_test_handler('set_latest_for_tracking_label', args, kwargs)
 
@@ -96,6 +102,27 @@ def test_validate_exclusive_end_date():
 
     with pytest.raises(TypeError):
         unit.validate_exclusive_end_date('fail')
+
+
+def test_get_for_tracking_label(monkeypatch):
+    mock_repo = MockCacheRepository('hello')
+    monkeypatch.setattr(unit, 'cache_repository', mock_repo)
+
+    result = unit.get_for_tracking_label('unittest', start_date=datetime.datetime(2017, 1, 31))
+    assert 2 == mock_repo.called
+    assert 'unittest' == mock_repo.called_with_args[0]
+    assert datetime.datetime(2017, 1, 31).date() == mock_repo.called_with_args[1].date()
+    assert isinstance(result, dict)
+    assert 'hello' == result.get('latest')
+    assert 'hello' == result.get('recent')
+
+    mock_repo = MockCacheRepository('hello')
+    monkeypatch.setattr(unit, 'cache_repository', mock_repo)
+
+    result = unit.get_for_tracking_label('unittest')
+    # testing a datetime.now call, be as generous as possible
+    assert (datetime.datetime.utcnow() - datetime.timedelta(days=29)).date() >= mock_repo.called_with_args[1].date()
+    assert (datetime.datetime.utcnow() - datetime.timedelta(days=31)).date() <= mock_repo.called_with_args[1].date()
 
 
 def test_set_for_tracking_label(monkeypatch):

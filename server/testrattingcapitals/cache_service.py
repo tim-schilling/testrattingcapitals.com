@@ -51,9 +51,30 @@ def validate_tracked_kill_list(tracked_kill_list):
         validate_tracked_kill(kill)
 
 
+def validate_start_date(start_date):
+    if start_date and not isinstance(start_date, datetime):
+        raise(TypeError('start_date'))
+
+
 def validate_exclusive_end_date(exclusive_end_date):
     if exclusive_end_date and not isinstance(exclusive_end_date, datetime):
         raise(TypeError('exclusive_end_date'))
+
+
+def get_for_tracking_label(tracking_label, **kwargs):
+    validate_tracking_label(tracking_label)
+
+    default_start_date = datetime.utcnow() - timedelta(days=DEFAULT_EXPIRATION_CUTOFF_DAYS)
+    start_date = kwargs.get('start_date', default_start_date)
+    validate_start_date(kwargs.get('start_date'))
+
+    latest = cache_repository.get_latest_for_label(tracking_label)
+    recents = cache_repository.get_recents_for_label(tracking_label, start_date)
+
+    return {
+        'latest': latest,
+        'recent': recents
+    }
 
 
 def set_for_tracking_label(tracking_label, tracked_kill_list):
