@@ -48,6 +48,10 @@ class DeclarativeBaseJSONEncoder(json.JSONEncoder):
                     # modify to parse datetimes as isoformat strings
                     if isinstance(data, datetime.datetime):
                         fields[field] = data.isoformat()
+                    # This is a terrible hack, but I'm not sure of a better way to deal with our
+                    # json-as-a-string business on output
+                    elif isinstance(obj, TrackedKill) and field == 'full_response':
+                        fields[field] = json.loads(data)
                     else:
                         json.dumps(data)  # this will fail on non-encodable values, like other classes
                         fields[field] = data

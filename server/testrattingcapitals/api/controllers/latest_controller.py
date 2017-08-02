@@ -16,18 +16,33 @@
   <http://www.gnu.org/licenses/>.
 """
 
-from flask import Flask
-from flask_restful import Api
+from flask import jsonify
+from flask_restful import Resource
+import os
 
-from testrattingcapitals.api.controllers.health_controller import HealthController
-from testrattingcapitals.api.controllers.latest_controller import LatestController
+from testrattingcapitals import cache_service
+from testrattingcapitals.processors import \
+    all_processor, \
+    deployment_bad_dragon_processor, \
+    ratting_capital_processor, \
+    vni_processor
+
+PROCESSORS = [
+    deployment_bad_dragon_processor,
+    ratting_capital_processor,
+    vni_processor,
+]
+
+if os.getenv('PERSIST_ALL'):
+    PROCESSORS.append(all_processor)
 
 
-def setup_routes(app, api):
-    if not isinstance(app, Flask):
-        TypeError('app must be of type ', type(Flask))
-    if not isinstance(api, Api):
-        TypeError('api must be of type ', type(Api))
+class LatestController(Resource):
+    def get(self):
+        result = dict()
+        for proc in PROCESSORS:
+            result[proc.TRACKING_LABEL] = cache_service.get_latest_for_tracking_label(
+                proc.TRACKING_LABEL
+            )
 
-    api.add_resource(HealthController, '/', '/health')
-    api.add_resource(LatestController, '/api/v2.0.0/latest')
+        return jsonify(result)

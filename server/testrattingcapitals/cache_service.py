@@ -77,6 +77,12 @@ def get_for_tracking_label(tracking_label, **kwargs):
     }
 
 
+def get_latest_for_tracking_label(tracking_label):
+    validate_tracking_label(tracking_label)
+
+    return cache_repository.get_latest_for_label(tracking_label)
+
+
 def set_for_tracking_label(tracking_label, tracked_kill_list):
     validate_tracking_label(tracking_label)
     validate_tracked_kill_list(tracked_kill_list)
