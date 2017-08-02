@@ -22,6 +22,11 @@ from sqlalchemy import Column, DateTime, Float, Index, Integer, String, \
     Text
 from sqlalchemy.ext.declarative import declarative_base, DeclarativeMeta
 
+MARSHAL_IGNORE_FIELDS = {
+    'to_json', 'from_json', 'alliance_name', 'ship_name',
+    'character_name', 'alliance_name', 'system_name',
+    'corporation_name',
+}
 
 Base = declarative_base()
 
@@ -52,11 +57,13 @@ class DeclarativeBaseJSONEncoder(json.JSONEncoder):
                     # json-as-a-string business on output
                     elif isinstance(obj, TrackedKill) and field == 'full_response':
                         fields[field] = json.loads(data)
+                    elif field in MARSHAL_IGNORE_FIELDS:
+                        continue
                     else:
                         json.dumps(data)  # this will fail on non-encodable values, like other classes
                         fields[field] = data
                 except TypeError:
-                    fields[field] = None
+                        fields[field] = None
             # a json-encodable dict
             return fields
 
