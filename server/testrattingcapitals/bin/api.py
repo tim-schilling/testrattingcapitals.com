@@ -20,12 +20,12 @@
 from flask import Flask
 import logging
 import os
-import signal
 import sys
 
 logger = logging.getLogger('testrattingcapitals')
 
 app = Flask(__name__)
+
 
 def configure_logging():
     logger.setLevel(int(os.getenv('LOG_LEVEL', logging.DEBUG)))
@@ -33,9 +33,10 @@ def configure_logging():
     stdio.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
     logger.addHandler(stdio)
 
+
 configure_logging()
-    
 logger.info('testrattingcapitals api started')
+
 
 @app.route('/')
 def health():
