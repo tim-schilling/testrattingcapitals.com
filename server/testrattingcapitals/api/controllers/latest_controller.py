@@ -41,8 +41,9 @@ class LatestController(Resource):
     def get(self):
         result = dict()
         for proc in PROCESSORS:
-            result[proc.TRACKING_LABEL] = cache_service.get_latest_for_tracking_label(
-                proc.TRACKING_LABEL
-            )
-
+            result[proc.TRACKING_LABEL] = {
+                'kill': cache_service.get_latest_for_tracking_label(
+                    proc.TRACKING_LABEL
+                )
+            }
         return jsonify(result)
