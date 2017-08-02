@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
   Copyright (c) 2016-2017 Tony Lechner and contributors
 
@@ -19,22 +18,14 @@
 
 from flask import Flask
 from flask_restful import Api
-import logging
-import os
-import sys
 
-from testrattingcapitals.api import router
-
-logger = logging.getLogger('testrattingcapitals')
-logger.setLevel(int(os.getenv('LOG_LEVEL', logging.DEBUG)))
-stdio = logging.StreamHandler(sys.stdout)
-stdio.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-logger.addHandler(stdio)
-
-app = Flask(__name__)
-api = Api(app)
+from testrattingcapitals.api.controllers.health_controller import HealthController
 
 
-logger.info('testrattingcapitals api started')
-router.setup_routes(app, api)
-logger.debug('testrattingcapitals api routes set up')
+def setup_routes(app, api):
+    if not isinstance(app, Flask):
+        TypeError('app must be of type ', type(Flask))
+    if not isinstance(api, Api):
+        TypeError('api must be of type ', type(Api))
+
+    api.add_resource(HealthController, '/', '/health')

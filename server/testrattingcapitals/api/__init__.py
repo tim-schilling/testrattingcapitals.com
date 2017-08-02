@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
   Copyright (c) 2016-2017 Tony Lechner and contributors
 
@@ -16,25 +15,3 @@
   along with testrattingcapitals.com.  If not, see
   <http://www.gnu.org/licenses/>.
 """
-
-from flask import Flask
-from flask_restful import Api
-import logging
-import os
-import sys
-
-from testrattingcapitals.api import router
-
-logger = logging.getLogger('testrattingcapitals')
-logger.setLevel(int(os.getenv('LOG_LEVEL', logging.DEBUG)))
-stdio = logging.StreamHandler(sys.stdout)
-stdio.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-logger.addHandler(stdio)
-
-app = Flask(__name__)
-api = Api(app)
-
-
-logger.info('testrattingcapitals api started')
-router.setup_routes(app, api)
-logger.debug('testrattingcapitals api routes set up')
