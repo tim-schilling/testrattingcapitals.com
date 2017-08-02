@@ -24,6 +24,7 @@ import os
 import sys
 
 from testrattingcapitals.api import router
+from testrattingcapitals.schema import DeclarativeBaseJSONEncoder
 
 logger = logging.getLogger('testrattingcapitals')
 logger.setLevel(int(os.getenv('LOG_LEVEL', logging.DEBUG)))
@@ -32,6 +33,7 @@ stdio.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %
 logger.addHandler(stdio)
 
 app = Flask(__name__)
+app.json_encoder = DeclarativeBaseJSONEncoder
 api = Api(app)
 
 
