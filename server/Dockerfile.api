@@ -26,5 +26,6 @@ RUN adduser -u $EXEC_UID -s /bin/sh -D runtime_user && \
     chown -R runtime_user:runtime_user /app
 USER runtime_user
 
+EXPOSE 8080
 ENV REDIS_CONNECTION_STRING="redis://redis:6379/0"
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
