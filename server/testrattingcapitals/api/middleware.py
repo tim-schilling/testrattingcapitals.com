@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
   Copyright (c) 2016-2017 Tony Lechner and contributors
 
@@ -18,26 +17,25 @@
 """
 
 from flask import Flask
-from flask_restful import Api
-import logging
-import os
-import sys
+from testrattingcapitals.api.middlewares import cors
 
-from testrattingcapitals.api import middleware, router
-from testrattingcapitals.schema import DeclarativeBaseJSONEncoder
-
-logger = logging.getLogger('testrattingcapitals')
-logger.setLevel(int(os.getenv('LOG_LEVEL', logging.DEBUG)))
-stdio = logging.StreamHandler(sys.stdout)
-stdio.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-logger.addHandler(stdio)
-
-app = Flask(__name__)
-app.json_encoder = DeclarativeBaseJSONEncoder
-api = Api(app)
+middleware_modules = [
+    cors
+]
 
 
-logger.info('testrattingcapitals api started')
-middleware.register(app)
-router.setup_routes(app, api)
-logger.debug('testrattingcapitals api routes set up')
+def register(app):
+    if not isinstance(app, Flask):
+        raise TypeError('app')
+
+    for middleware in middleware_modules:
+        if hasattr(middleware, 'before_first_request'):
+            app.before_first_request(middleware.before_first_request)
+        if hasattr(middleware, 'before_request'):
+            app.before_request(middleware.before_request)
+        if hasattr(middleware, 'teardown_request'):
+            app.teardown_request(middleware.teardown_request)
+        if hasattr(middleware, 'after_request'):
+            app.after_request(middleware.after_request)
+
+    return app
