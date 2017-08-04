@@ -35,7 +35,6 @@ def after_request(response):
     }
 
     for key, value in cors_headers.items():
-        print('{} - {}'.format(key, value))
         if key == 'Access-Control-Allow-Credentials' and value != 'true':
             continue
 
