@@ -21,7 +21,7 @@ clean-node:
 requirements:
 	yarn
 
-check:
+check: requirements
 	npm run test -- --coverage
 
 build: requirements check
