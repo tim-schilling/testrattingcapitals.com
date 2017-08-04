@@ -24,6 +24,9 @@ requirements:
 check: requirements
 	npm run test -- --coverage
 
+check-watch: requirements
+	npm run test
+
 build: requirements check
 	npm run build
 
