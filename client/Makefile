@@ -29,5 +29,5 @@ build: requirements check
 
 run-client: requirements
 	# prevent foot-gunning by refusing to start if the API server isn't alive
-	curl --silent --output /dev/null -f http://localhost:8080/health || (echo "API server isn't running!" && exit 1)
+	curl -m 1 --silent --output /dev/null -f http://localhost:8080/health || (echo "API server isn't running!" && exit 1)
 	BROWSER=$(CRA_BROWSER) HOST=$(CRA_HOST) PORT=$(CRA_PORT) npm run start
