@@ -14,6 +14,7 @@ all: requirements check build
 clean:
 	rm -rf build
 	rm -rf coverage
+	rm -rf testrattingcapitals.com
 
 clean-node:
 	rm -rf node_modules
@@ -34,3 +35,8 @@ run-client: requirements
 	# prevent foot-gunning by refusing to start if the API server isn't alive
 	curl -m 1 --silent --output /dev/null -f http://localhost:8080/health || (echo "API server isn't running!" && exit 1)
 	BROWSER=$(CRA_BROWSER) HOST=$(CRA_HOST) PORT=$(CRA_PORT) npm run start
+
+deploy: clean build
+	cp -Rf build testrattingcapitals.com
+	rsync -a testrattingcapitals.com tony@testrattingcapitals.com:/var/www/html
+	rm -rf testrattingcapitals.com
