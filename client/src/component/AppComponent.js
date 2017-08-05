@@ -3,6 +3,8 @@ import { getLatestTrackedKills } from '../repository/LatestTrackedKillRepository
 
 import LatestTrackedKillComponent from './LatestTrackedKillComponent';
 
+const PROCESS_ALL = process.env.REACT_APP_PROCESS_ALL ? true : false;
+
 const TRACKING_KEY_DETAIL_MAP = {
   'ALL': {
       trackingLabel: 'All kills',
@@ -21,6 +23,13 @@ const TRACKING_KEY_DETAIL_MAP = {
       trackingLabelDescription: 'since a Vexor Navy Issue has died.',
   },
 };
+
+if (PROCESS_ALL) {
+  TRACKING_KEY_DETAIL_MAP.ALL = {
+      trackingLabel: 'All kills',
+      trackingLabelDescription: 'since a kill has happened somewhere in EVE.'
+  }
+}
 
 class AppComponent extends Component {
   constructor(props) {
@@ -51,10 +60,16 @@ class AppComponent extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         {Object.keys(this.state).map((key) => {
           const val = this.state[key];
-          return <LatestTrackedKillComponent key={key} {...val} />;
+          return (
+            <div className="row" key={key}>
+              <div className="col-xs-12">
+                <LatestTrackedKillComponent  {...val} />
+              </div>
+            </div>
+          );
         })}
       </div>
     );
