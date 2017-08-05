@@ -16,11 +16,11 @@ const TRACKING_KEY_DETAIL_MAP = {
   },
   'RATTING_CAPITAL': {
     trackingLabel: 'Ratting Capital',
-    trackingLabelDescription: 'since a ratting capital has died.',
+    trackingLabelDescription: 'since a TEST ratting capital has died.',
   },
   'VNI': {
       trackingLabel: 'Vexor Navy Issue',
-      trackingLabelDescription: 'since a Vexor Navy Issue has died.',
+      trackingLabelDescription: 'since a TEST Vexor Navy Issue has died.',
   },
 };
 
