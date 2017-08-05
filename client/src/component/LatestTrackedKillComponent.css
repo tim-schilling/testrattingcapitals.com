@@ -1,0 +1,22 @@
+.latestTrackedKillComponent {
+  text-align: center;
+}
+
+.latestTrackedKillComponent .calloutMessage {
+  font-size: 18pt; 
+}
+
+.latestTrackedKillComponent .calloutMessage em {
+  font-size: 24pt;
+  color: #900;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.latestTrackedKillComponent .killUrl a {
+  text-decoration: none;
+}
+
+.latestTrackedKillComponent .killUrl a:hover {
+  text-decoration: underline;
+}

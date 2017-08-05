@@ -1,6 +1,8 @@
 import * as moment from 'moment';
 import React, { Component } from 'react';
 
+import './LatestTrackedKillComponent.css';
+
 const ZKILLBOARD_BASE_URL = process.env.REACT_APP_ZKILLBOARD_BASE_URL || '';
 const TIMEDIFF_INTERVAL_TICKRATE = process.env.REACT_APP_TIMEDIFF_RERENDER_TICK_RATE || 250;
 
@@ -9,6 +11,8 @@ export const timeSinceTimestamp = (timestamp) => {
     return '';
   }
 
+  const pluralize = (label, value) => (value === 1) ? `${label}` : `${label}s`;
+
   const now = moment.utc();
   const then = moment.utc(timestamp);
 
@@ -16,15 +20,18 @@ export const timeSinceTimestamp = (timestamp) => {
   const duration = moment.duration(ms);
 
   const hours = Math.floor(duration.asHours());
+  const hoursLabel = pluralize('hour', hours);
   const minutes = parseInt(moment.utc(ms).format('m'), 10);
+  const minutesLabel = pluralize('minute', minutes);
   const seconds = parseInt(moment.utc(ms).format('s'), 10);
+  const secondsLabel = pluralize('second', seconds);
 
-  if (hours > 0) {
-    return `${hours} hours, ${minutes} minutes, and ${seconds} seconds`;
+  if (hours > 1) {
+    return `${hours} ${hoursLabel}, ${minutes} ${minutesLabel}, and ${seconds} ${secondsLabel}`;
   } else if (minutes > 0) {
-    return `${minutes} minutes and ${seconds} seconds`;
+    return `${minutes} ${minutesLabel} and ${seconds} ${secondsLabel}`;
   } else {
-    return `${seconds} seconds`;
+    return `${seconds} ${secondsLabel}`;
   }
 }
 
@@ -99,12 +106,9 @@ class LatestTrackedKillComponent extends Component {
 
   render() {
     return (
-      <div>
-        <p>{ this.state.trackingLabel }</p>
-        <p>{ this.state.trackingLabelDescription }</p>
-        <p>{ moment(this.state.killTimestamp).format('YYYY-MM-DD HH:mm:ss') }</p>
-        <p>{ this.state.killUrl }</p>
-        <p>{ this.state.killTimediff }</p>
+      <div className="latestTrackedKillComponent">
+        <p className="calloutMessage">It has been <em>{ this.state.killTimediff }</em> { this.state.trackingLabelDescription }</p>
+        <p className="killUrl"><a href={ this.state.killUrl }>{ this.state.killUrl }</a></p>
       </div>
     );
   }

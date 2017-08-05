@@ -6,19 +6,19 @@ import LatestTrackedKillComponent from './LatestTrackedKillComponent';
 const TRACKING_KEY_DETAIL_MAP = {
   'ALL': {
       trackingLabel: 'All kills',
-      trackingLabelDescription: 'Any kill that has happened anywhere to anyone.'
+      trackingLabelDescription: 'since a kill has happened somewhere in EVE.'
   },
   'BAD_DRAGON_DEPLOYMENT': {
     trackingLabel: 'Bad Dragon Deployment Deserter',
-    trackingLabelDescription: 'Any loss in our home region while we are at war and deployed abroad. A most shameful display.',
+    trackingLabelDescription: 'since a TEST member has died in shame alone in the South, not helping his alliance deployed in the North.',
   },
   'RATTING_CAPITAL': {
     trackingLabel: 'Ratting Capital',
-    trackingLabelDescription: '$40 - $3500 ships that take years to train into.',
+    trackingLabelDescription: 'since a ratting capital has died.',
   },
   'VNI': {
       trackingLabel: 'Vexor Navy Issue',
-      trackingLabelDescription: 'The most common ratting subcapital in the game. Low income alone, but easy to get into and scales well.',
+      trackingLabelDescription: 'since a Vexor Navy Issue has died.',
   },
 };
 
