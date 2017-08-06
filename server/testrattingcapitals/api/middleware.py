@@ -24,18 +24,20 @@ middleware_modules = [
 ]
 
 
+MIDDLEWARE_METHODS = [
+  'before_first_request',
+  'before_request',
+  'teardown_request',
+  'after_request',
+]
+  
 def register(app):
     if not isinstance(app, Flask):
         raise TypeError('app')
 
     for middleware in middleware_modules:
-        if hasattr(middleware, 'before_first_request'):
-            app.before_first_request(middleware.before_first_request)
-        if hasattr(middleware, 'before_request'):
-            app.before_request(middleware.before_request)
-        if hasattr(middleware, 'teardown_request'):
-            app.teardown_request(middleware.teardown_request)
-        if hasattr(middleware, 'after_request'):
-            app.after_request(middleware.after_request)
+        for method_name in MIDDLEWARE_METHODS:
+            if hasattr(middleware, method_name):
+                getattr(app, method_name)(getattr(middleware, method_name))
 
     return app
