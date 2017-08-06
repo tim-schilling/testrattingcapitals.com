@@ -16,18 +16,20 @@
   <http://www.gnu.org/licenses/>.
 """
 
-from flask import jsonify
-from flask_restful import Resource
 import json
 import logging
 import os
 
+from flask import jsonify
+from flask_restful import Resource
+
 from testrattingcapitals import cache_service
-from testrattingcapitals.processors import \
-    all_processor, \
-    deployment_bad_dragon_processor, \
-    ratting_capital_processor, \
-    vni_processor
+from testrattingcapitals.processors import (
+    all_processor,
+    deployment_bad_dragon_processor,
+    ratting_capital_processor,
+    vni_processor,
+)
 
 logger = logging.getLogger('testrattingcapitals')
 
