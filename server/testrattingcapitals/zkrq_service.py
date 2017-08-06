@@ -46,7 +46,7 @@ def get(queue_id=None, time_to_wait=None):
     if parsed_response['package'] is None:
         logger.debug('zkrq returned no kill')
         return None
-    logger.debug('{} zkrq returned'.format(parsed_response['package']['killID']))
+    logger.debug('f{parsed_response['package']['killID']} zkrq returned')
     return parsed_response
 
 
@@ -60,11 +60,7 @@ def validate_queue_id(queue_id):
 
 
 def validate_time_to_wait(time_to_wait):
-    if isinstance(time_to_wait, int):
-        if time_to_wait <= 0:
-            raise ValueError('time_to_wait')
-        if time_to_wait > 10:
-            raise ValueError('time_to_wait')
-        return
-    if time_to_wait is not None:
+    if not isinstance(time_to_wait, int):
         raise TypeError('time_to_wait')
+    if 0 >= time_to_wait > 10:
+        raise ValueError('time_to_wait')
