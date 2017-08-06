@@ -21,12 +21,9 @@ import { getLatestTrackedKills } from '../repository/LatestTrackedKillRepository
 import LatestTrackedKillComponent from './LatestTrackedKillComponent';
 
 const PROCESS_ALL = process.env.REACT_APP_PROCESS_ALL ? true : false;
+const TICK_RATE = parseInt(process.env.REACT_APP_TICK_RATE || 5000, 10);
 
 const TRACKING_KEY_DETAIL_MAP = {
-  'ALL': {
-      trackingLabel: 'All kills',
-      trackingLabelDescription: 'since a kill has happened somewhere in EVE.'
-  },
   'BAD_DRAGON_DEPLOYMENT': {
     trackingLabel: 'Bad Dragon Deployment Deserter',
     trackingLabelDescription: 'since a TEST member has died in shame alone in the South, not helping his alliance deployed in the North.',
@@ -54,8 +51,32 @@ class AppComponent extends Component {
     this.state = {};
 
     const self = this;
-    getLatestTrackedKills()
-    .then((response) => {
+    this.updateInterval = setInterval(() => {
+      return self.tick();
+    }, TICK_RATE);
+
+    this.tick();
+  }
+
+  componentWillUnmount() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+  }
+
+  tick() {
+    const self = this;
+    return getLatestTrackedKills()
+    .then(response => self.digestLatestPayload(response), (ex) => {
+      console.warn(':frogsiren:', ex);
+      throw ex;
+      // TODO show something meaningful to the user
+    })
+    .then((newState) => self.setState(newState));
+  };
+
+  digestLatestPayload(response) {
+    return new Promise((resolve) => {
       const newState = {};
       for (let trackingKey in TRACKING_KEY_DETAIL_MAP) {
         if (TRACKING_KEY_DETAIL_MAP.hasOwnProperty(trackingKey) && 
@@ -67,10 +88,7 @@ class AppComponent extends Component {
           }
         }
       }
-      self.setState(newState);
-    }, (ex) => {
-      console.warn(':frogsiren:', ex);
-      // TODO show something meaningful to the user
+      return resolve(newState);
     })
   }
 
