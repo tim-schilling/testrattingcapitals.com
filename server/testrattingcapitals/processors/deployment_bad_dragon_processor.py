@@ -47,7 +47,7 @@ logger = logging.getLogger('testrattingcapitals')
 def process(zkill):
     if not isinstance(zkill, dict):
         logger.debug('? processor DEPLOYMENT_BAD_DRAGON REJECT - not dict')
-        return None
+        return
 
     # is alliance kill
     if 'alliance' not in zkill['package']['killmail']['victim']:
@@ -56,7 +56,7 @@ def process(zkill):
                 zkill['package']['killID']
             )
         )
-        return None
+        return
 
     if shared_defines.TEST_ALLIANCE_ID != zkill['package']['killmail']['victim']['alliance']['id']:
         logger.debug(
@@ -64,7 +64,7 @@ def process(zkill):
                 zkill['package']['killID']
             )
         )
-        return None
+        return
 
     # is after startdate
     kill_time = datetime.strptime(zkill['package']['killmail']['killTime'], '%Y.%m.%d %H:%M:%S')
@@ -74,7 +74,7 @@ def process(zkill):
                 zkill['package']['killID']
             )
         )
-        return None
+        return
 
     # is before enddate
     if END_TIMESTAMP and kill_time > END_TIMESTAMP:
@@ -83,7 +83,7 @@ def process(zkill):
                 zkill['package']['killID']
             )
         )
-        return None
+        return
 
     # is in esoteria
     kill_system = zkill['package']['killmail']['solarSystem']['id']
@@ -94,6 +94,6 @@ def process(zkill):
                 'ESOTERIA_SYSTEM_IDS'
             )
         )
-        return None
+        return
 
     return TRACKING_LABEL
