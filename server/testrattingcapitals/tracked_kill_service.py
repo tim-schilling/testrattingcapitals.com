@@ -65,9 +65,9 @@ def get_since(tracking_label, start_date):
 
 def validate_tracking_label(tracking_label):
     if not isinstance(tracking_label, str):
-        raise(TypeError('tracking_label'))
+        raise TypeError('tracking_label')
     if tracking_label == '':
-        raise(ValueError('tracking_label'))
+        raise ValueError('tracking_label')
 
 
 def validate_start_date(start_date):
@@ -89,6 +89,8 @@ def convert_zk_timestamp_to_datetime(zk_timestamp):
 def convert_zk_response_to_tracked_kill(tracking_label, zk):
     """Convert zk response dict to a TrackedKill instance
     """
+    
+    # Should this be an and?
     if not isinstance(tracking_label, str) or not isinstance(zk, dict):
         return None
 
