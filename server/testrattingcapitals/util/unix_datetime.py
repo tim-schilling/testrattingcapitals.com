@@ -18,6 +18,7 @@
 
 import calendar
 import datetime
+import pytz
 
 
 def datetime_to_unix(datetime_value):
@@ -31,4 +32,4 @@ def unix_to_datetime(unix_timestamp):
     if not isinstance(unix_timestamp, int):
         return None
 
-    return datetime.datetime.utcfromtimestamp(unix_timestamp).replace(tzinfo=datetime.timezone.utc)
+    return pytz.UTC.localize(datetime.datetime.utcfromtimestamp(unix_timestamp))
