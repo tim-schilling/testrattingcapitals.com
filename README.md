@@ -5,10 +5,6 @@ A digital Wall of Shame for the EVE Online group TEST Alliance Please Ignore.
 Reads in a stream of all "kill" events in EVE Online and stores interesting 
 (read: hilariously embarassing) ones.
 
-Version 2.0.0 is under active development and not ready for release. Check out
-the [version1](https://github.com/tonymke/testrattingcapitals.com/tree/release/1.0.0)
-branch for now - it's what's live at [testrattingcapitals.com](https://testrattingcapitals.com).
-
 ## Services
 
 * **daemon** _(python)_ reads in kill events from [zKillboard
