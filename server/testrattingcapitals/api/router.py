@@ -24,10 +24,5 @@ from testrattingcapitals.api.controllers.latest_controller import LatestControll
 
 
 def setup_routes(app, api):
-    if not isinstance(app, Flask):
-        TypeError('app must be of type ', type(Flask))
-    if not isinstance(api, Api):
-        TypeError('api must be of type ', type(Api))
-
     api.add_resource(HealthController, '/', '/health')
     api.add_resource(LatestController, '/api/v2/latest')
